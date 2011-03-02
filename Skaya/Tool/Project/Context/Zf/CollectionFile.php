@@ -101,7 +101,7 @@ class Skaya_Tool_Project_Context_Zf_CollectionFile extends Zend_Tool_Project_Con
 			'classes' => array(
 				new Zend_CodeGenerator_Php_Class(array(
 						'name' => $className,
-						'extendedClass' => 'Model_Collection_Abstract',
+						'extendedClass' => 'Skaya_Model_Collection_Abstract',
 						'properties' => array(
 							new Zend_CodeGenerator_Php_Property(array(
 								'name' => '_itemType',

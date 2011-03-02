@@ -1,5 +1,5 @@
 <?php
-class Model_Row_Abstract extends Zend_Db_Table_Row {
+class Skaya_Model_Row_Abstract extends Zend_Db_Table_Row {
 	
 	protected $_dataTypes = array(
 		'bit' => 'int',
@@ -63,3 +63,4 @@ class Model_Row_Abstract extends Zend_Db_Table_Row {
 		}
 	}
 }
+?>

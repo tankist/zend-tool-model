@@ -122,17 +122,6 @@ class Skaya_Tool_Project_Provider_XMapper extends Skaya_Tool_Project_Provider_Ab
 				$typedMappersDirectory->getPath();
 			}
 		}
-		
-		self::_createCustomMapper($mappersDirectory, 'Abstract', 'abstractMapperFile', null, $moduleName);
-		self::_createCustomMapper($mappersDirectory, 'Interface', 'interfaceMapperFile', null, $moduleName);
-		self::_createCustomMapper($mappersDirectory, 'Exception', 'exceptionMapperFile', null, $moduleName);
-		
-		if ($type) {
-			$mapperCreateAtDirectory = $typedMappersDirectory;
-			self::_createCustomMapper($typedMappersDirectory, 'Abstract', 'abstractMapperFile', $type, $moduleName);
-			self::_createCustomMapper($typedMappersDirectory, 'Interface', 'interfaceMapperFile', $type, $moduleName);
-			self::_createCustomMapper($typedMappersDirectory, 'Exception', 'exceptionMapperFile', $type, $moduleName);
-		}
 
 		$newMapper = $mapperCreateAtDirectory->createResource(
 			'mapperFile',
@@ -140,22 +129,6 @@ class Skaya_Tool_Project_Provider_XMapper extends Skaya_Tool_Project_Provider_Ab
 			);
 
 		return $newMapper;
-	}
-	
-	protected static function _createCustomMapper(Zend_Tool_Project_Profile_Resource $mappersDirectory, $mapperName, $mapperResourceType = 'mapperFile', $type = null, $moduleName = null) {
-		if (!$mappersDirectory) {
-			throw new Zend_Tool_Project_Provider_Exception('Mappers directory was not found');
-		}
-		$mapperParams = array('mapperName' => $mapperName);
-		if ($type) {
-			$mapperParams['type'] = $type;
-		}
-		$mapper = false;
-		if (!$mappersDirectory->search(array($mapperResourceType => $mapperParams))) {
-			$mapper = $mappersDirectory->createResource($mapperResourceType, $mapperParams);
-			$mapper->create();
-		}
-		return $mapper;
 	}
 	
 }

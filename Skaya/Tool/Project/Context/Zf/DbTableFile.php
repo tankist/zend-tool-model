@@ -66,7 +66,7 @@ class Skaya_Tool_Project_Context_Zf_DbTableFile extends Zend_Tool_Project_Contex
 	}
 	
 	public function getDefaultNamespace() {
-		return 'Model_DbTable_';
+		return 'Skaya_Model_DbTable_';
 	}
 	
 	public function getPersistentAttributes()

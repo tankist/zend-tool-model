@@ -1,6 +1,6 @@
 <?php
 
-interface Model_Interface {
+interface Skaya_Model_Interface {
 	
 	public function save();
 	
@@ -9,5 +9,5 @@ interface Model_Interface {
 	public function populate($data = array());
 	
 	public function toArray();
-	
 }
+?>

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    Model
- * @subpackage Model_Mapper
+ * @subpackage Skaya_Model_Mapper
  */
-class Model_Mapper_MapperBroker
+class Skaya_Model_Mapper_MapperBroker
 {
 	/**
 	 * @var Zend_Loader_PluginLoader_Interface
@@ -25,7 +25,7 @@ class Model_Mapper_MapperBroker
 
 	/**
 	 * Default instance of the broker
-	 * @var Model_Mapper_MapperBroker
+	 * @var Skaya_Model_Mapper_MapperBroker
 	 */
 	protected static $_instance = null;
 	
@@ -54,7 +54,7 @@ class Model_Mapper_MapperBroker
 	public static function setPluginLoader($loader)
 	{
 		if ((null !== $loader) && (!$loader instanceof Zend_Loader_PluginLoader_Interface)) {
-			throw new Model_Mapper_Exception('Invalid plugin loader provided to MapperBroker');
+			throw new Skaya_Model_Mapper_Exception('Invalid plugin loader provided to MapperBroker');
 		}
 		self::$_pluginLoader = $loader;
 	}
@@ -101,10 +101,10 @@ class Model_Mapper_MapperBroker
 	/**
 	 * addMapper() - Add Mapper objects
 	 *
-	 * @param Model_Mapper_Interface $mapper
+	 * @param Skaya_Model_Mapper_Interface $mapper
 	 * @return void
 	 */
-	static public function addMapper(Model_Mapper_Interface $mapper)
+	static public function addMapper(Skaya_Model_Mapper_Interface $mapper)
 	{
 		self::getStack($mapper->getProvider())->push($mapper);
 		return;
@@ -135,7 +135,7 @@ class Model_Mapper_MapperBroker
 	 * the Mapper class cannot be found.
 	 *
 	 * @param  string $name
-	 * @return Model_Mapper_Interface
+	 * @return Skaya_Model_Mapper_Interface
 	 */
 	public static function getStaticMapper($name, $provider = null)
 	{
@@ -161,8 +161,8 @@ class Model_Mapper_MapperBroker
 	 * prior to retrieving it.
 	 *
 	 * @param  string $name
-	 * @return Model_Mapper_Interface
-	 * @throws Model_Exception
+	 * @return Skaya_Model_Mapper_Interface
+	 * @throws Skaya_Model_Exception
 	 */
 	public static function getExistingMapper($name, $provider = null)
 	{
@@ -170,7 +170,7 @@ class Model_Mapper_MapperBroker
 		$stack = self::getStack($provider);
 
 		if (!isset($stack->{$name})) {
-			throw new Model_Mapper_Exception('Mapper "' . $name . '" has not been registered with the Mapper broker');
+			throw new Skaya_Model_Mapper_Exception('Mapper "' . $name . '" has not been registered with the Mapper broker');
 		}
 
 		return $stack->{$name};
@@ -229,8 +229,8 @@ class Model_Mapper_MapperBroker
 		$provider = self::_normalizeMapperName($provider);
 		if (self::$_stack === null ||
 			!array_key_exists($provider, self::$_stack) ||
-			!(self::$_stack[$provider] instanceof Model_Mapper_MapperBroker_PriorityStack)) {
-			self::$_stack[$provider] = new Model_Mapper_MapperBroker_PriorityStack();
+			!(self::$_stack[$provider] instanceof Skaya_Model_Mapper_MapperBroker_PriorityStack)) {
+			self::$_stack[$provider] = new Skaya_Model_Mapper_MapperBroker_PriorityStack();
 		}
 
 		return self::$_stack[$provider];
@@ -246,7 +246,7 @@ class Model_Mapper_MapperBroker
 	/**
 	 * Singleton
 	 * @static
-	 * @return Model_Mapper_MapperBroker
+	 * @return Skaya_Model_Mapper_MapperBroker
 	 */
 	public static function getInstance() {
 		if (empty(self::$_instance)) {
@@ -259,7 +259,7 @@ class Model_Mapper_MapperBroker
 	 * getMapper() - get Mapper by name
 	 *
 	 * @param  string $name
-	 * @return Model_Mapper_Interface
+	 * @return Skaya_Model_Mapper_Interface
 	 */
 	public function getMapper($name, $provider = null)
 	{
@@ -285,8 +285,8 @@ class Model_Mapper_MapperBroker
 	 *
 	 * @param  string $method
 	 * @param  array $args
-	 * @return Model_Mapper_Interface
-	 * @throws Model_Exception if no mapper exists
+	 * @return Skaya_Model_Mapper_Interface
+	 * @throws Skaya_Model_Exception if no mapper exists
 	 */
 	public function __call($method, $args)
 	{
@@ -298,7 +298,7 @@ class Model_Mapper_MapperBroker
 	 * Retrieve Mapper by name as object property
 	 *
 	 * @param  string $name
-	 * @return Model_Mapper_Interface
+	 * @return Skaya_Model_Mapper_Interface
 	 */
 	public function __get($name)
 	{
@@ -336,13 +336,13 @@ class Model_Mapper_MapperBroker
 			$className = $provider . '_' . ucfirst($name);
 			$class = self::getPluginLoader()->load($className);
 		} catch (Zend_Loader_PluginLoader_Exception $e) {
-			throw new Model_Mapper_Exception('Mapper by name ' . $className . ' not found', 0, $e);
+			throw new Skaya_Model_Mapper_Exception('Mapper by name ' . $className . ' not found', 0, $e);
 		}
 
 		$mapper = new $class();
 
-		if (!($mapper instanceof Model_Mapper_Interface)) {
-			throw new Model_Mapper_Exception('Mapper name ' . $name . ' -> class ' . $class . ' is not of type Model_Mapper_Interface');
+		if (!($mapper instanceof Skaya_Model_Mapper_Interface)) {
+			throw new Skaya_Model_Mapper_Exception('Mapper name ' . $name . ' -> class ' . $class . ' is not of type Skaya_Model_Mapper_Interface');
 		}
 
 		$mapper->init();

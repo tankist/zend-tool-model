@@ -1,8 +1,8 @@
 <?php
-abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
+abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 	
-	protected $_rowClass = 'Model_Row_Abstract';
-	protected $_rowsetClass = 'Model_Rowset_Abstract';
+	protected $_rowClass = 'Skaya_Model_Row_Abstract';
+	protected $_rowsetClass = 'Skaya_Model_Rowset_Abstract';
 	/**
 	* Filters array with only rows presented in current table
 	* 
@@ -66,7 +66,7 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 			}
 		}
 		
-		if (empty($actionName)) throw new Model_DbTable_Exception("Undefined method $name");
+		if (empty($actionName)) throw new Skaya_Model_DbTable_Exception("Undefined method $name");
 		$fetchField = substr($name, strlen($actionName));
 		$arguments = $this->_splitCallArguments($fetchField, $arguments);
 		return call_user_func_array(array($this, $actionName), $arguments);
@@ -76,7 +76,7 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 	* Return necessary table
 	* 
 	* @param string $name
-	* @return Model_DbTable_Abstract
+	* @return Skaya_Model_DbTable_Abstract
 	*/
 	public function factory($name) {
 		$className = $name;
@@ -84,7 +84,7 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 			$className = 'Model_DbTable_'.ucfirst(Zend_Filter::filterStatic($name, 'Word_UnderscoreToCamelCase'));
 		}
 		if (!class_exists($className, true)) {
-			throw new Model_DbTable_Exception("Table class $className not found");
+			throw new Skaya_Model_DbTable_Exception("Table class $className not found");
 		}
 		return new $className();
 	}
@@ -122,3 +122,4 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 		return $arguments;
 	}
 }
+?>

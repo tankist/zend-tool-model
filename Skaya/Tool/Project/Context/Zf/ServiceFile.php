@@ -91,7 +91,7 @@ class Skaya_Tool_Project_Context_Zf_ServiceFile extends Zend_Tool_Project_Contex
 			'fileName' => $this->getPath(),
 			'classes' => array(
 				new Zend_CodeGenerator_Php_Class(array(
-					'extendedClass' => 'Service_Abstract',
+					'extendedClass' => 'Skaya_Model_Service_Abstract',
 					'name' => $className
 					))
 				)

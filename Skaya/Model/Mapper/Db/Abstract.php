@@ -1,5 +1,5 @@
 <?php
-abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements Model_Mapper_Db_Interface {
+abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Db_Interface {
 	
 	protected static $_tables = array();
 	
@@ -9,13 +9,13 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 	* Creates (if necessary) and returns table class instance
 	* 
 	* @param string $name
-	* @return Model_DbTable_Abstract
-	* @throws Model_Mapper_Db_Exception
+	* @return Skaya_Model_DbTable_Abstract
+	* @throws Skaya_Model_Mapper_Db_Exception
 	*/
 	protected static function _getTableByName($name) {
 		$name = ucfirst($name);
 		if (!array_key_exists($name, self::$_tables)) {
-			self::$_tables[$name] = Model_DbTable_Abstract::factory($name);
+			self::$_tables[$name] = Skaya_Model_DbTable_Abstract::factory($name);
 		}
 		return self::$_tables[$name];
 	}
@@ -169,7 +169,7 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 	protected function _prepareSearchQuery($conditions, $order = null, $count = null, $offset = null) {
 		$mainTable = self::_getTableByName($this->_mapperTableName);
 		$select = $mainTable->select(false)
-			->from(array($this->_mapperTableName => $mainTable->info(Model_DbTable_Abstract::NAME)));
+			->from(array($this->_mapperTableName => $mainTable->info(Skaya_Model_DbTable_Abstract::NAME)));
 		$terms = $this->_parseSearchConditions($conditions);
 		
 		$tables = array($this->_mapperTableName => $mainTable);
@@ -181,7 +181,7 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 						* @var Zend_Db_Table
 						*/
 						$tableInstance = $tables[$tableName] = self::_getTableByName($tableName);
-						$fullTableName = $tableInstance->info(Model_DbTable_Abstract::NAME);
+						$fullTableName = $tableInstance->info(Skaya_Model_DbTable_Abstract::NAME);
 						$tableClass = get_class($tableInstance);
 						$_tables = array_values($tables);
 						$_tablesAliases = array_keys($tables);
@@ -347,11 +347,11 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 	
 	protected function _joinTable(Zend_Db_Table_Select $select, array $reference) {
 		$definitions = array();
-		for ($i=0;$i<count($reference[Model_DbTable_Abstract::COLUMNS]);$i++) {
+		for ($i=0;$i<count($reference[Skaya_Model_DbTable_Abstract::COLUMNS]);$i++) {
 			$tableColumn = $reference['table']->getAdapter()
-				->quoteIdentifier($reference[Model_DbTable_Abstract::COLUMNS][$i]);
+				->quoteIdentifier($reference[Skaya_Model_DbTable_Abstract::COLUMNS][$i]);
 			$referenceTableColumn = $reference['referenceTable']->getAdapter()
-				->quoteIdentifier($reference[Model_DbTable_Abstract::REF_COLUMNS][$i]);
+				->quoteIdentifier($reference[Skaya_Model_DbTable_Abstract::REF_COLUMNS][$i]);
 			$definitions[] = $reference['tableAlias'].".$tableColumn = {$reference['referenceTableAlias']}.$referenceTableColumn";
 		}
 		$table = $reference['table'];
@@ -364,7 +364,7 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 		$select
 			->setIntegrityCheck(false)
 			->joinInner(
-				array($tableAlias => $table->info(Model_DbTable_Abstract::NAME)), 
+				array($tableAlias => $table->info(Skaya_Model_DbTable_Abstract::NAME)), 
 				join(' AND ', $definitions), 
 				array()
 			);
@@ -380,7 +380,7 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 		$table = self::_getTableByName($this->_mapperTableName);
 		$data = $table->filterDataByRowsNames($data);
 		
-		$primary = $table->info(Model_DbTable_Abstract::PRIMARY);
+		$primary = $table->info(Skaya_Model_DbTable_Abstract::PRIMARY);
 		$primaryValues = array_filter(array_intersect_key($data, array_flip($primary)));
 		if (count($primaryValues) != count($primary)) {
 			$row = $table->createRow($data);
@@ -398,3 +398,4 @@ abstract class Model_Mapper_Db_Abstract extends Model_Mapper_Abstract implements
 		return $row;
 	}
 }
+?>

@@ -1,6 +1,6 @@
 <?php
 
-interface Model_Mapper_Interface {
+interface Skaya_Model_Mapper_Interface {
     
     public function save($data);
 	
@@ -11,3 +11,4 @@ interface Model_Mapper_Interface {
     public function getProvider();
 	
 }
+?>

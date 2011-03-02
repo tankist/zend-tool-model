@@ -1,6 +1,6 @@
 <?php
 
-abstract class Model_Mapper_Abstract implements Model_Mapper_Interface {
+abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interface {
 	
 	protected $_fieldMapping = array();
 	
@@ -14,8 +14,8 @@ abstract class Model_Mapper_Abstract implements Model_Mapper_Interface {
 	* @param mixed $provider
 	* @param mixed $modelName
 	* @param mixed $options
-	* @return Model_Mapper_Abstract
-	* @throws Model_Mapper_Exception
+	* @return Skaya_Model_Mapper_Abstract
+	* @throws Skaya_Model_Mapper_Exception
 	*/
 	public static function factory($provider, $modelName, $options = array()) {
 		$className = ucfirst($provider).'_'.ucfirst($modelName);
@@ -40,7 +40,7 @@ abstract class Model_Mapper_Abstract implements Model_Mapper_Interface {
     /**
 	 * Set mapper state from options array
 	 * @param  array $options
-	 * @return Model_Mapper_Abstract
+	 * @return Skaya_Model_Mapper_Abstract
 	 */
 	public function setOptions($options) {
 		foreach ($options as $key => $value) {
@@ -122,3 +122,4 @@ abstract class Model_Mapper_Abstract implements Model_Mapper_Interface {
     }
 
 }
+?>

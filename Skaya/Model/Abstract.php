@@ -1,6 +1,6 @@
 <?php
 
-abstract class Model_Abstract implements Model_Interface {
+abstract class Skaya_Model_Abstract implements Skaya_Model_Interface {
 	
 	const MAPPER_DATABASE = 'db';
 	const MAPPER_SESSION = 'session';
@@ -13,7 +13,7 @@ abstract class Model_Abstract implements Model_Interface {
     public $mappers;
 	
 	public function __construct($data = array()) {
-        $this->mappers = Model_Mapper_MapperBroker::getInstance();
+        $this->mappers = Skaya_Model_Mapper_MapperBroker::getInstance();
 		if (!empty($data)) $this->populate($data);
 	}
 	
@@ -28,7 +28,7 @@ abstract class Model_Abstract implements Model_Interface {
 		}
 		
 		if (!is_array($data)) {
-			throw new Model_Exception('Data must be array or object');
+			throw new Skaya_Model_Exception('Data must be array or object');
 		}
 		
 		foreach ($data as $key => $value) {
@@ -40,7 +40,7 @@ abstract class Model_Abstract implements Model_Interface {
 	
 	public function __set($name, $value) {
 		if (!is_string($name) || empty($name)) {
-			throw new Model_Exception('Name cannot be empty');
+			throw new Skaya_Model_Exception('Name cannot be empty');
 		}
 		
 		$camelcaseFilter = new Zend_Filter_Word_UnderscoreToCamelCase();
@@ -107,3 +107,4 @@ abstract class Model_Abstract implements Model_Interface {
         return $this->mappers->getMapper($this->_modelName);
     }
 }
+?>

@@ -27,7 +27,7 @@
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, ArrayAccess, Countable
+class Skaya_Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, ArrayAccess, Countable
 {
 
     protected $_mappersByPriority = array();
@@ -38,7 +38,7 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * Magic property overloading for returning mapper by name
      *
      * @param string $mapperName    The mapper name
-     * @return Model_Mapper_Abstract
+     * @return Skaya_Model_Mapper_Abstract
      */
     public function __get($mapperName)
     {
@@ -53,7 +53,7 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * Magic property overloading for returning if mapper is set by name
      *
      * @param string $mapperName    The mapper name
-     * @return Model_Mapper_Abstract
+     * @return Skaya_Model_Mapper_Abstract
      */
     public function __isset($mapperName)
     {
@@ -64,7 +64,7 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * Magic property overloading for unsetting if mapper is exists by name
      *
      * @param string $mapperName    The mapper name
-     * @return Model_Mapper_Abstract
+     * @return Skaya_Model_Mapper_Abstract
      */
     public function __unset($mapperName)
     {
@@ -74,10 +74,10 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
     /**
      * push mapper onto the stack
      *
-     * @param Model_Mapper_Abstract $mapper
-     * @return Model_MapperBroker_PriorityStack
+     * @param Skaya_Model_Mapper_Abstract $mapper
+     * @return Skaya_Model_MapperBroker_PriorityStack
      */
-    public function push(Model_Mapper_Abstract $mapper)
+    public function push(Skaya_Model_Mapper_Abstract $mapper)
     {
         $this->offsetSet($this->getNextFreeHigherPriority(), $mapper);
         return $this;
@@ -97,7 +97,7 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * offsetExists()
      *
      * @param int|string $priorityOrMapperName
-     * @return Model_MapperBroker_PriorityStack
+     * @return Skaya_Model_MapperBroker_PriorityStack
      */
     public function offsetExists($priorityOrMapperName)
     {
@@ -112,12 +112,12 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * offsetGet()
      *
      * @param int|string $priorityOrMapperName
-     * @return Model_MapperBroker_PriorityStack
+     * @return Skaya_Model_MapperBroker_PriorityStack
      */
     public function offsetGet($priorityOrMapperName)
     {
         if (!$this->offsetExists($priorityOrMapperName)) {
-            throw new Model_Exception('A mapper with priority ' . $priorityOrMapperName . ' does not exist.');
+            throw new Skaya_Model_Exception('A mapper with priority ' . $priorityOrMapperName . ' does not exist.');
         }
 
         if (is_string($priorityOrMapperName)) {
@@ -131,15 +131,15 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * offsetSet()
      *
      * @param int $priority
-     * @param Model_Mapper_Abstract $mapper
-     * @return Model_MapperBroker_PriorityStack
+     * @param Skaya_Model_Mapper_Abstract $mapper
+     * @return Skaya_Model_MapperBroker_PriorityStack
      */
     public function offsetSet($priority, $mapper)
     {
         $priority = (int) $priority;
 
-        if (!$mapper instanceof Model_Mapper_Abstract) {
-            throw new Model_Exception('$mapper must extend Model_Mapper_Abstract.');
+        if (!$mapper instanceof Skaya_Model_Mapper_Abstract) {
+            throw new Skaya_Model_Exception('$mapper must extend Skaya_Model_Mapper_Abstract.');
         }
 
         if (array_key_exists($mapper->getName(), $this->_mappersByNameRef)) {
@@ -168,12 +168,12 @@ class Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate, Arra
      * offsetUnset()
      *
      * @param int|string $priorityOrMapperName Priority integer or the mapper name
-     * @return Model_MapperBroker_PriorityStack
+     * @return Skaya_Model_MapperBroker_PriorityStack
      */
     public function offsetUnset($priorityOrMapperName)
     {
         if (!$this->offsetExists($priorityOrMapperName)) {
-            throw new Model_Exception('A mapper with priority or name ' . $priorityOrMapperName . ' does not exist.');
+            throw new Skaya_Model_Exception('A mapper with priority or name ' . $priorityOrMapperName . ' does not exist.');
         }
 
         if (is_string($priorityOrMapperName)) {

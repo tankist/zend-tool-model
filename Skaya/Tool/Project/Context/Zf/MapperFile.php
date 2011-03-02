@@ -104,7 +104,7 @@ class Skaya_Tool_Project_Context_Zf_MapperFile extends Zend_Tool_Project_Context
 			'classes' => array(
 				new Zend_CodeGenerator_Php_Class(array(
 						'name' => $className,
-						'extendedClass' => 'Model_Mapper_' . $mapperType . 'Abstract',
+						'extendedClass' => 'Skaya_Model_Mapper_' . $mapperType . 'Abstract',
 						'properties' => array(
 							new Zend_CodeGenerator_Php_Property(array(
 								'const' => true,

@@ -43,7 +43,7 @@ class Skaya_Tool_Project_Context_Zf_ModelFile
 			'fileName' => $this->getPath(),
 			'classes' => array(
 				new Zend_CodeGenerator_Php_Class(array(
-					'ExtendedClass' => 'Model_Abstract',
+					'ExtendedClass' => 'Skaya_Model_Abstract',
 					'Name' => $className,
 					'Properties' => array(
 						new Zend_CodeGenerator_Php_Property(array(
