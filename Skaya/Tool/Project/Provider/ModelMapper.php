@@ -28,6 +28,18 @@ class Skaya_Tool_Project_Provider_ModelMapper extends Skaya_Tool_Project_Provide
 		
 		$this->_storeProfile();
 	}
+
+    public function getItem($name, $type, $entity, $module = null) {
+        
+    }
+
+    public function getItems($name, $type, $module = null) {
+
+    }
+
+    public function getItemsPaginator($name, $type, $module = null) {
+        
+    }
 	
 	/**
 	 * hasResource()
