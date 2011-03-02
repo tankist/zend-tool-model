@@ -1,7 +1,7 @@
 <?php
 require_once("Abstract.php");
 
-class Skaya_Tool_Project_Provider_ModelCollection extends Skaya_Tool_Project_Provider_Abstract {
+class Skaya_Tool_Project_Provider_XCollection extends Skaya_Tool_Project_Provider_Abstract {
 	
 	public function create($name, $itemType = null, $module = null) {
 		$profile = $this->_loadProfile(self::NO_PROFILE_THROW_EXCEPTION);
