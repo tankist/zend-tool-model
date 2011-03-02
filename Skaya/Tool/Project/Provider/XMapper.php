@@ -121,6 +121,9 @@ class Skaya_Tool_Project_Provider_XMapper extends Skaya_Tool_Project_Provider_Ab
 				$typedMappersDirectory = $mappersDirectory->createResource('mappersDirectory', array('type' => $type));
 				$typedMappersDirectory->getPath();
 			}
+			if ($typedMappersDirectory) {
+				$mapperCreateAtDirectory = $typedMappersDirectory;
+			}
 		}
 
 		$newMapper = $mapperCreateAtDirectory->createResource(
