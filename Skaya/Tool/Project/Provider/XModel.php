@@ -4,7 +4,9 @@ class Skaya_Tool_Project_Provider_XModel extends Zend_Tool_Project_Provider_Mode
 
 	public function create($name, $module = null) {
 		parent::create($name, $module);
+		
 		$profile = $this->_loadProfile(self::NO_PROFILE_THROW_EXCEPTION);
+
 		if (!($modelsDirectory = self::_getModelsDirectoryResource($profile, $module))) {
             if ($module) {
                 $exceptionMessage = 'A model directory for module "' . $module . '" was not found.';
@@ -17,6 +19,8 @@ class Skaya_Tool_Project_Provider_XModel extends Zend_Tool_Project_Provider_Mode
 		self::_createCustomModel($modelsDirectory, 'Abstract', 'abstractModelFile');
 		self::_createCustomModel($modelsDirectory, 'Interface', 'interfaceModelFile');
 		self::_createCustomModel($modelsDirectory, 'Exception', 'exceptionModelFile');
+
+		$this->_storeProfile();
 	}
 	
 	protected static function _createCustomModel(Zend_Tool_Project_Profile_Resource $modelsDirectory, $modelName, $modelResourceType = 'modelFile') {
