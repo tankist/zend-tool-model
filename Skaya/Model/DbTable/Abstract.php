@@ -1,8 +1,8 @@
 <?php
 abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 	
-	protected $_rowClass = 'Skaya_Model_Row_Abstract';
-	protected $_rowsetClass = 'Skaya_Model_Rowset_Abstract';
+	protected $_rowClass = 'Skaya_Model_Row';
+	protected $_rowsetClass = 'Skaya_Model_Rowset';
 	/**
 	* Filters array with only rows presented in current table
 	* 

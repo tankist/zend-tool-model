@@ -9,146 +9,77 @@ class Skaya_Tool_Project_Provider_XTables extends Skaya_Tool_Project_Provider_Ab
 	* @var Zend_Db_Adapter_Abstract
 	*/
 	protected static $_dbAdapter = null;
+
 	protected static $_foreignKeys = array('dependent' => array(), 'references' => array());
-	
-	const FOREIGN_KEYS_REGEXP = '$FOREIGN KEY.*?\((.*?)\).*?REFERENCES(.*?)\((.*?)\)$im';
+
 	/**
 	 * create()
 	 *
 	 * @param string $name
 	 */
-	public function create($dsn)
+	public function create($filterTablePrefix = null)
 	{
 		$profile = $this->_loadProfileRequired();
-		$modelsDirectoryResource = $profile->search('modelsDirectory');
-		if (!$modelsDirectoryResource) {
-			throw new Zend_Tool_Project_Provider_Exception('models directory was not found in current profile');
-		}
-		
-		if (!($dbTableDirectory = $modelsDirectoryResource->search('DbTableDirectory'))) {
-			$dbTableDirectory = $modelsDirectoryResource->createResource('DbTableDirectory');
-		}
-		
-		if ($modelsDirectoryResource->hasChildren()) {
-			$newProfile = $modelsDirectoryResource->getProfile();
-		}
-		else {
-			$newProfile = new Zend_Tool_Project_Profile(array(
-				'projectDirectory' => $profile->getAttribute('projectDirectory'),
-				'profileData' => $this->_getDefaultProfile()
-			));
-			$newProfile->loadFromData();
-			$modelsDirectoryResource->append($newProfile->search('dbTableDirectory'));
-		}
-		
-		$tables = self::getDbAdapter($dsn)->listTables();
-		foreach ($tables as $table) {
-			$this->_parseForeignKeys($table);
-		}
-		
-		foreach ($tables as $table) {
-			$tableResource = $newProfile->search(array('dbTableFile' => array('dbTableName' => $table)));
-			if (!$tableResource) {
-				$tableResource = $newProfile->createResourceAt('dbTableDirectory', 'dbTableFile', array('dbTableName' => $table));
+		$adapter = self::getDbAdapter($profile);
+
+		try {
+			$decorator = Skaya_Tool_Project_Context_Zf_TablesDecorator_Abstract::getDecoratorClass($adapter);
+			call_user_func(array($decorator, 'parseForeignKeys'), $adapter);
+
+			$dbTablesDirectory = self::_getDbTablesDirectory($profile);
+			$tables = Skaya_Tool_Project_Context_Zf_TablesDecorator_Abstract::getTables($adapter);
+			foreach($tables as $table) {
+				if (!self::hasResource($profile, $table)) {
+					$dbTableFile = $dbTablesDirectory->createResource(
+						'dbTableFile',
+						array('dbTableName' => $table, 'dbAdapter' => $adapter)
+					);
+					$dbTableFile->create();
+				}
 			}
 		}
-		
-		foreach ($newProfile->getIterator() as $resource) {
-			if ($resource->getContext() instanceOf Zend_Tool_Project_Context_Zf_DbTableFile) $resource->create();
+		catch (Exception $e) {
+			$this->_registry->getResponse()->appendContent($e->getMessage());
+			$this->_registry->getResponse()->setException($e);
 		}
-		$this->_storeProfile();
+
+//		$this->_storeProfile();
+	}
+
+	public static function hasResource(Zend_Tool_Project_Profile $profile, $name) {
+		$dbTableDirectory = self::_getDbTablesDirectory($profile);
+		return (
+			$dbTableDirectory &&
+				($dbTableDirectory->search(array('dbTableFile' => array('dbTableName' => $name)))
+					instanceof Zend_Tool_Project_Profile_Resource)
+		);
+	}
+
+	protected static function _getDbTablesDirectory(Zend_Tool_Project_Profile $profile) {
+		if (!$modelsDirectoryResource = $profile->search('modelsDirectory')) {
+			$modelsDirectoryResource = $profile->createResourceAt('applicationDirectory', 'modelsDirectory');
+		}
+		if (!$dbTableDirectory = $modelsDirectoryResource->search('dbTableDirectory')) {
+			$dbTableDirectory = $modelsDirectoryResource->createResource('dbTableDirectory');
+		}
+		return $dbTableDirectory;
 	}
 	
-	public static function getDbAdapter($dsn = '') {
+	public static function getDbAdapter(Zend_Tool_Project_Profile $profile = null) {
 		if (self::$_dbAdapter == null) {
-			$autoloader = Zend_Loader_Autoloader::getInstance();
-			if (!(self::$_dbAdapter instanceOf Zend_Db_Adapter_Abstract)) {
-				$dbOptions = self::_parseDSN($dsn);
-				self::$_dbAdapter = Zend_Db::factory(new Zend_Config($dbOptions));
+			$config = $profile->search('applicationConfigFile');
+			if (!$config) {
+				throw new Zend_Tool_Project_Provider_Exception('Project config must be initialized before');
+			}
+			defined('APPLICATION_PATH') ||
+				define('APPLICATION_PATH', realpath(parent::_findProfileDirectory() . DIRECTORY_SEPARATOR . 'application'));
+			$application = new Zend_Application('development', $config->getPath());
+			self::$_dbAdapter = $application->bootstrap('db')->getBootstrap()->getResource('db');
+			if (!(self::$_dbAdapter instanceof Zend_Db_Adapter_Abstract)) {
+				throw new Zend_Tool_Project_Provider_Exception('Db adapter cannot be initialized');
 			}
 		}
 		return self::$_dbAdapter;
 	}
-	
-	public static function getForeignKeysReference($tableName) {
-		$d = self::$_foreignKeys['dependent'];
-		$r = self::$_foreignKeys['references'];
-		return array(
-			'dependent' => (array_key_exists($tableName, $d))?$d[$tableName]:array(),
-			'references' => (array_key_exists($tableName, $r))?$r[$tableName]:array()
-		);
-	}
-	
-	protected static function _parseForeignKeys($tableName) {
-		$dependentTables = $refTables = array();
-		
-		$adapter = self::getDbAdapter();
-		$data = $adapter->fetchRow('SHOW CREATE TABLE '.$adapter->quoteTableAs($tableName));
-		$data = $data['Create Table'];
-		$keysCount = preg_match_all(self::FOREIGN_KEYS_REGEXP, $data, $keys);
-		if ($keysCount > 0) {
-			$filter = new Zend_Filter_Word_UnderscoreToCamelCase();
-			for($i=0;$i<$keysCount, $tableFrom = $tableName, $columnFrom = trim($keys[1][$i], ' `'), $tableTo = trim($keys[2][$i], ' `'), $columnTo = trim($keys[3][$i], ' `');$i++){
-				if (!array_key_exists($tableTo, $dependentTables)) {
-					$dependentTables[$tableTo] = array();
-				}
-				$dependentTables[$tableTo][] = $tableFrom;
-				
-				if (!array_key_exists($tableFrom, $refTables)) {
-					$refTables[$tableFrom] = array();
-				}
-				$referenceName = $filter->filter($tableTo);
-				if (!array_key_exists($referenceName, $refTables[$tableFrom])) {
-					$refTables[$tableFrom][$referenceName] = array(
-						'columns' => array($columnFrom),
-						'refTableClass' => $tableTo,
-						'refColumns' => array($columnTo)
-					);
-				}
-				else {
-					$refTables[$tableFrom]['columns'][$referenceName] = $columnFrom;
-					$refTables[$tableFrom]['refColumns'][$referenceName] = $columnTo;
-				}
-					
-			}
-		}
-		
-		self::$_foreignKeys['dependent'] = array_merge_recursive(self::$_foreignKeys['dependent'], $dependentTables);
-		self::$_foreignKeys['references'] = array_merge(self::$_foreignKeys['references'], $refTables);
-	}
-	
-	protected static function _parseDSN($dsn) {
-		list($adapter, $dsn) = explode('://', $dsn);
-		if (empty($dsn)) {
-			throw new Zend_Tool_Project_Provider_Exception('Incorrect DSN passed. Use the following form: adapter://username:password@host/database');
-		}
-		$params = array();
-		$connectionString = trim($dsn, ' /');
-		list($credentials, $server) = explode('@', $connectionString);
-		if (!empty($credentials)) {
-			list($params['username'], $params['password']) = explode(':', $credentials);
-		}
-		if (!empty($server)) {
-			list($params['host'], $params['dbname']) = explode('/', $server);
-		}
-		return array('adapter' => $adapter, 'params' => array_map('strval', $params));
-	}
-	
-	protected function _getDefaultProfile() {
-		$data = <<<EOS
-<?xml version="1.0" encoding="UTF-8"?>
-	<projectProfile type="default">
-		<projectDirectory>
-			<applicationDirectory>
-				<modelsDirectory>
-					<dbTableDirectory>
-						<dbTableFile abstract="true" dbTableName="abstract" />
-					</dbTableDirectory>
-				</modelsDirectory>
-			</applicationDirectory>
-		</projectDirectory>
-	</projectProfile>
-EOS;
-		return $data;
-	}
+
 }
