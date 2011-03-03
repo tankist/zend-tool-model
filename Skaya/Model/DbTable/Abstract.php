@@ -15,7 +15,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 	}
 
 	/**
-	* @return Zend_Db_Table_Rowset_Abstract
+	* @return Zend_Db_Table_Rowset
 	*/
 	public function fetchAllBy($key, $value = null, $order = null, $count = null, $offset = null) {
 		$where = $this->_whereValues($key, $value);
@@ -23,19 +23,19 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 	}
 
 	/**
-	* @return Zend_Db_Table_Row_Abstract
+	* @return Zend_Db_Table_Row
 	*/
 	public function fetchRowBy($key, $value = null, $order = null, $count = null, $offset = null) {
 		$where = $this->_whereValues($key, $value);
 		return $this->fetchRow($where, $order, $count, $offset);
 	}
-	
+
 	public function count(Zend_Db_Select $select) {
 		$select->reset(Zend_Db_Select::COLUMNS)->columns(array('__count' => new Zend_Db_Expr('COUNT(*)')));
 		$result = $this->_fetch($select);
 		return (count($result) > 0)?(int)$result[0]['__count']:0;
 	}
-	
+
 	public function countBy($key, $value = null) {
 		$where = $this->_whereValues($key, $value);
 		$select = $this->select(self::SELECT_WITH_FROM_PART);
@@ -44,10 +44,10 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 		}
 		return $this->count($select);
 	}
-	
+
 	/**
 	* Deletes row by key-value pair
-	* 
+	*
 	* @param mixed $key
 	* @param mixed $value
 	* @return int          The number of rows deleted.
@@ -56,7 +56,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 		$where = $this->_whereValues($key, $value);
 		return $this->delete($where);
 	}
-	
+
 	public function __call($name, $arguments) {
 		$actionName = '';
 		foreach (array('fetchRowBy', 'fetchAllBy', 'deleteBy', 'countBy') as $_a) {
@@ -65,16 +65,16 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 				break;
 			}
 		}
-		
+
 		if (empty($actionName)) throw new Skaya_Model_DbTable_Exception("Undefined method $name");
 		$fetchField = substr($name, strlen($actionName));
 		$arguments = $this->_splitCallArguments($fetchField, $arguments);
 		return call_user_func_array(array($this, $actionName), $arguments);
 	}
-	
+
 	/**
 	* Return necessary table
-	* 
+	*
 	* @param string $name
 	* @return Skaya_Model_DbTable_Abstract
 	*/
@@ -88,7 +88,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 		}
 		return new $className();
 	}
-	
+
 	protected function _whereValues($key, $value = null) {
 		if ($value === null && is_array($key)) {
 			$where = array();
@@ -102,7 +102,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 		}
 		return $where;
 	}
-	
+
 	protected function _splitCallArguments($fetchField, $arguments) {
 		$fetchFields = explode('And', $fetchField);
 		if (count($fetchFields) == 1) {
