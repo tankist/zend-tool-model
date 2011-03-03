@@ -97,75 +97,15 @@ class Skaya_Tool_Project_Context_Zf_MapperFile extends Zend_Tool_Project_Context
 	public function getContents()
 	{
 		$mapperType = (!empty($this->_type))?$this->_type . '_':'';
-		$className = $this->getFullClassName($this->_mapperName, 'Model_Mapper_' . $mapperType);
-
-		$getItemsBody = <<<EOS
-		\$<token>Table = self::_getTableByName(self::TABLE_NAME);
-\$<token>Blob = \$<token>Table->fetchAll(null, \$order, \$count, \$offset);
-return \$this->getMappedArrayFromData(\$<token>Blob);
-
-EOS;
-		$getItemsPaginatorBody = <<<EOS
-		\$<token>Table = self::_getTableByName(self::TABLE_NAME);
-\$select = \$<token>Table->select();
-if (\$order) {
-	\$select->order(\$this->_mapOrderStatement(\$order));
-}
-\$paginator = Skaya_Paginator::factory(\$select, 'DbSelect');
-\$paginator->addFilter(new Zend_Filter_Callback(array(
-	'callback' => array(\$this, 'getMappedArrayFromData')
-)));
-return \$paginator;
-EOS;
-		$getItemByIdBody = <<<EOS
-		\$<token>Table = self::_getTableByName(self::TABLE_NAME);
-\$<token>Blob = \$<token>Table->fetchRowById(\$<token>_id);
-return \$this->getMappedArrayFromData(\$<token>Blob);
-EOS;
-
-		$methods = array();
-		if ($this->_mapperName) {
-			$methodsToken = strtolower($this->_mapperName);
-			$methodsUcToken = ucfirst($this->_mapperName);
-			$methods = array(
-				new Zend_CodeGenerator_Php_Method(array(
-					'name' => 'get' . $methodsUcToken . 'ById',
-					'parameters' => array(
-						new Zend_CodeGenerator_Php_Parameter(array(
-							'name' => 'id'
-						))
-					),
-					'body' => str_replace('<token>', $methodsToken, $getItemByIdBody)
-				)),
-				new Zend_CodeGenerator_Php_Method(array(
-					'name' => 'get' . $methodsUcToken . 's',
-					'parameters' => array(
-						new Zend_CodeGenerator_Php_Parameter(array(
-							'name' => 'order',
-							'defaultValue' => null
-						)),
-						new Zend_CodeGenerator_Php_Parameter(array(
-							'name' => 'count',
-							'defaultValue' => null
-						)),
-						new Zend_CodeGenerator_Php_Parameter(array(
-							'name' => 'offset',
-							'defaultValue' => null
-						))
-					),
-					'body' => str_replace('<token>', $methodsToken, $getItemsBody)
-				)),
-				new Zend_CodeGenerator_Php_Method(array(
-					'name' => 'get' . $methodsUcToken . 'sPaginator',
-					'parameters' => array(
-						new Zend_CodeGenerator_Php_Parameter(array(
-							'name' => 'order',
-							'defaultValue' => null
-						))
-					),
-					'body' => str_replace('<token>', $methodsToken, $getItemsPaginatorBody)
-				))
-			);
+		$className = $this->getFullClassName($this->getMapperName(), 'Model_Mapper_' . $mapperType);
+		$methods = Skaya_Tool_Project_Context_Zf_MapperDecorator_Default::getMapperClassMethods($this);
+		$properties = Skaya_Tool_Project_Context_Zf_MapperDecorator_Default::getMapperClassProperties($this);
+		if ($mapperType) {
+			$mapperDecorator = 'Skaya_Tool_Project_Context_Zf_MapperDecorator_' . ucfirst($this->getType());
+			if (class_exists($mapperDecorator, true)) {
+				$methods = call_user_func(array($mapperDecorator, 'getMapperClassMethods'), $this);
+				$properties = call_user_func(array($mapperDecorator, 'getMapperClassProperties'), $this);
+			}
 		}
 
 		$codeGenFile = new Zend_CodeGenerator_Php_File(array(
@@ -174,21 +114,7 @@ EOS;
 				new Zend_CodeGenerator_Php_Class(array(
 					'name' => $className,
 					'extendedClass' => 'Skaya_Model_Mapper_' . $mapperType . 'Abstract',
-					'properties' => array(
-						new Zend_CodeGenerator_Php_Property(array(
-							'const' => true,
-							'name' => 'TABLE_NAME',
-							'defaultValue' => $this->_mapperName . 's'
-						)),
-						new Zend_CodeGenerator_Php_Property(array(
-							'name' => '_mapperTableName',
-							'visibility' => Zend_CodeGenerator_Php_Property::VISIBILITY_PROTECTED,
-							'defaultValue' => new Zend_CodeGenerator_Php_Property_DefaultValue(array(
-								'value' => 'self::TABLE_NAME',
-								'type' => Zend_CodeGenerator_Php_Property_DefaultValue::TYPE_CONSTANT
-							))
-						)),
-					),
+					'properties' => $properties,
 					'methods' => $methods
 				))
 			)
