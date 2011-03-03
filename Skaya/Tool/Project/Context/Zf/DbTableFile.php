@@ -13,7 +13,11 @@ class Skaya_Tool_Project_Context_Zf_DbTableFile extends Zend_Tool_Project_Contex
 		if ($this->_resource->hasAttribute('defaultNameFilter')) {
 			$filter = $this->_resource->getAttribute('defaultNameFilter');
 			if ($filter instanceof Zend_Filter_Interface) {
-				$this->setDefaultNameFilter($filter);
+				$filterStore = new Zend_Filter();
+				$filterStore
+					->addFilter($filter)
+					->addFilter($this->getDefaultNameFilter());
+				$this->setDefaultNameFilter($filterStore);
 			}
 		}
 		if ($this->_resource->hasAttribute('dbAdapter')) {

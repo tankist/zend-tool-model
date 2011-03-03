@@ -30,9 +30,13 @@ class Skaya_Tool_Project_Provider_XTables extends Skaya_Tool_Project_Provider_Ab
 			$tables = Skaya_Tool_Project_Context_Zf_TablesDecorator_Abstract::getTables($adapter);
 			foreach($tables as $table) {
 				if (!self::hasResource($profile, $table)) {
+					$parameters = array('dbTableName' => $table, 'dbAdapter' => $adapter);
+					if ($filterTablePrefix) {
+						$parameters['defaultNameFilter'] = new Zend_Filter_StringTrim($filterTablePrefix);
+					}
 					$dbTableFile = $dbTablesDirectory->createResource(
 						'dbTableFile',
-						array('dbTableName' => $table, 'dbAdapter' => $adapter)
+						$parameters
 					);
 					$dbTableFile->create();
 				}
@@ -43,7 +47,7 @@ class Skaya_Tool_Project_Provider_XTables extends Skaya_Tool_Project_Provider_Ab
 			$this->_registry->getResponse()->setException($e);
 		}
 
-//		$this->_storeProfile();
+		$this->_storeProfile();
 	}
 
 	public static function hasResource(Zend_Tool_Project_Profile $profile, $name) {
