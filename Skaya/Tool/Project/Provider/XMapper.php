@@ -2,7 +2,7 @@
 class Skaya_Tool_Project_Provider_XMapper extends Skaya_Tool_Project_Provider_Abstract {
 	
 	public function create($name, $type = null, $module = null) {
-		$profile = $this->_loadProfile(self::NO_PROFILE_THROW_EXCEPTION);
+		$profile = $this->_loadProfile();
 		$name = ucwords($name);
 		
 		if (preg_match('#[_-]#', $name)) {
