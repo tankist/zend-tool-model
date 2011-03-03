@@ -48,7 +48,7 @@ class Skaya_Tool_Project_Provider_XCollection extends Skaya_Tool_Project_Provide
 	 */
 	public static function hasResource(Zend_Tool_Project_Profile $profile, $collectionName, $moduleName = null) {
 		if (!is_string($collectionName)) {
-			throw new Zend_Tool_Project_Provider_Exception('Zend_Tool_Project_Provider_collection::createResource() expects \"collectionName\" is the name of a collection resource to check for existence.');
+			throw new Zend_Tool_Project_Provider_Exception('Zend_Tool_Project_Provider_XCollection::createResource() expects \"collectionName\" is the name of a collection resource to check for existence.');
 		}
 
 		$collectionsDirectory = self::_getCollectionsDirectoryResource($profile, $moduleName);
@@ -97,11 +97,11 @@ class Skaya_Tool_Project_Provider_XCollection extends Skaya_Tool_Project_Provide
 	public static function createResource(Zend_Tool_Project_Profile $profile, $collectionName, $itemType, $moduleName = null)
 	{
 		if (!is_string($collectionName)) {
-			throw new Zend_Tool_Project_Provider_Exception('Zend_Tool_Project_Provider_collection::createResource() expects \"collectionName\" is the name of a collection resource to create.');
+			throw new Zend_Tool_Project_Provider_Exception('Zend_Tool_Project_Provider_XCollection::createResource() expects \"collectionName\" is the name of a collection resource to create.');
 		}
 		
 		if (!is_string($itemType)) {
-			throw new Zend_Tool_Project_Provider_Exception('Zend_Tool_Project_Provider_collection::createResource() expects \"itemType\" is the name of a model resource that collection will be belong to.');
+			throw new Zend_Tool_Project_Provider_Exception('Zend_Tool_Project_Provider_XCollection::createResource() expects \"itemType\" is the name of a model resource that collection will be belong to.');
 		}
 
 		if (!($collectionsDirectory = self::_getCollectionsDirectoryResource($profile, $moduleName))) {

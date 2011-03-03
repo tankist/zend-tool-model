@@ -51,7 +51,7 @@ class Skaya_Tool_Project_Context_Zf_ServicesDirectory extends Zend_Tool_Project_
 	 */
 	public function getName()
 	{
-		return 'ServicesDirectory';
+		return 'servicesDirectory';
 	}
 
 }
