@@ -46,7 +46,7 @@ class Skaya_Tool_Project_Provider_XTables extends Skaya_Tool_Project_Provider_Ab
 			$this->_registry->getResponse()->setException($e);
 		}
 
-		//$this->_storeProfile();
+		$this->_storeProfile();
 	}
 
 	public static function hasResource(Zend_Tool_Project_Profile $profile, $name) {
