@@ -9,19 +9,12 @@ class Skaya_Tool_Project_Context_Zf_DbTableFile extends Zend_Tool_Project_Contex
 	protected $_defaultNameFilter = null;
 
 	public function init() {
-		$this->_defaultNameFilter = new Zend_Filter_Word_UnderscoreToCamelCase();
-		if ($this->_resource->hasAttribute('defaultNameFilter')) {
-			$filter = $this->_resource->getAttribute('defaultNameFilter');
-			if ($filter instanceof Zend_Filter_Interface) {
-				$filterStore = new Zend_Filter();
-				$filterStore
-					->addFilter($filter)
-					->addFilter($this->getDefaultNameFilter());
-				$this->setDefaultNameFilter($filterStore);
-			}
-		}
 		if ($this->_resource->hasAttribute('dbAdapter')) {
 			$this->setAdapter($this->_resource->getAttribute('dbAdapter'));
+		}
+		if ($this->getAdapter() instanceof Zend_Db_Adapter_Abstract) {
+			$decorator = Skaya_Tool_Project_Context_Zf_TablesDecorator_Abstract::getDecoratorClass($this->getAdapter());
+			$this->_defaultNameFilter = call_user_func(array($decorator, 'getTableNameFilter'));
 		}
 		$this->setDbTableName($this->_resource->getAttribute('dbTableName'));
 		return parent::init();
@@ -83,7 +76,9 @@ class Skaya_Tool_Project_Context_Zf_DbTableFile extends Zend_Tool_Project_Contex
 			$_d = $ns . $this->getDefaultNameFilter()->filter($_d);
 		}
 		foreach ($foreignKeyReference['references'] as &$_d) {
-			$_d['refTableClass'] = $ns . $this->getDefaultNameFilter()->filter($_d['refTableClass']);
+			if (array_key_exists('refTableClass', $_d)) {
+				$_d['refTableClass'] = $ns . $this->getDefaultNameFilter()->filter($_d['refTableClass']);
+			}
 		}
 
 		$properties = array(

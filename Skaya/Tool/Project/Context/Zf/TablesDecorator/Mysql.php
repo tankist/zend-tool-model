@@ -6,6 +6,10 @@ class Skaya_Tool_Project_Context_Zf_TablesDecorator_Mysql
 
 	public static function parseForeignKeys(Zend_Db_Adapter_Abstract $adapter) {
 		if (empty(self::$_foreignKeys)) {
+			self::$_foreignKeys = array(
+				'dependent' => array(),
+				'references' => array()
+			);
 			foreach(self::getTables($adapter) as $tableName) {
 				$dependentTables = $refTables = array();
 
@@ -13,14 +17,13 @@ class Skaya_Tool_Project_Context_Zf_TablesDecorator_Mysql
 				$data = $data['Create Table'];
 				$keysCount = preg_match_all(self::FOREIGN_KEYS_REGEXP, $data, $keys);
 				if ($keysCount > 0) {
-					$filter = new Zend_Filter_Word_UnderscoreToCamelCase();
-					for($i = 0;
-					    $i<$keysCount,
+					$filter = self::getTableNameFilter();
+					for($i = 0,
 					        $tableFrom = $tableName,
 					        $columnFrom = trim($keys[1][$i], ' `'),
 					        $tableTo = trim($keys[2][$i], ' `'),
 					        $columnTo = trim($keys[3][$i], ' `');
-					    $i++){
+					    $i<$keysCount; $i++) {
 						if (!array_key_exists($tableTo, $dependentTables)) {
 							$dependentTables[$tableTo] = array();
 						}
