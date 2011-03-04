@@ -24,7 +24,7 @@ class Skaya_Tool_Project_Provider_XMapperGetter extends Skaya_Tool_Project_Provi
 			'Creating an getter named ' . $entityResource->getContext()->getGetterName()
 			);
 
-		//$this->_storeProfile();
+		$this->_storeProfile();
 	}
 
 	/**
