@@ -10,4 +10,8 @@ class Skaya_Tool_Project_Context_Zf_MapperDecorator_Default
 		return array();
 	}
 
+	public static function getMapperClassGetterMethod(Skaya_Tool_Project_Context_Zf_MapperFile $mapper, $getterName) {
+		return false;
+	}
+
 }

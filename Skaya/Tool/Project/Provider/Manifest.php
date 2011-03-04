@@ -12,7 +12,8 @@ class Skaya_Tool_Project_Provider_Manifest implements Zend_Tool_Framework_Manife
 			new Skaya_Tool_Project_Provider_XCollection(),
 			new Skaya_Tool_Project_Provider_XMapper(),
 			new Skaya_Tool_Project_Provider_XModel(),
-			new Skaya_Tool_Project_Provider_XService()
+			new Skaya_Tool_Project_Provider_XService(),
+			new Skaya_Tool_Project_Provider_XMapperGetter()
 		);
 	}
 	

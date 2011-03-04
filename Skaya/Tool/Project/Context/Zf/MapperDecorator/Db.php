@@ -98,5 +98,28 @@ EOS;
 		}
 		return $methods;
 	}
+	
+	public static function getMapperClassGetterMethod(Skaya_Tool_Project_Context_Zf_MapperFile $mapper, $entity) {
+		$itemName = $mapper->getMapperName();
+		$itemName = strtolower(substr($itemName, 0, 1)) . substr($itemName, 1);
+		$entity = strtolower(substr($entity, 0, 1)) . substr($entity, 1);
+		$ucEntity = ucfirst($entity);
+
+		$getItemByEntityBody = <<<EOS
+		\${$itemName}Table = self::_getTableByName(self::TABLE_NAME);
+\${$itemName}Blob = \${$itemName}Table->fetchRowBy{$ucEntity}(\${$entity});
+return \$this->getMappedArrayFromData(\${$itemName}Blob);
+EOS;
+		
+		return new Zend_CodeGenerator_Php_Method(array(
+			'name' => 'get' . ucfirst($itemName) . 'By' . $ucEntity,
+			'parameters' => array(
+				new Zend_CodeGenerator_Php_Parameter(array(
+					'name' => $entity
+				))
+			),
+			'body' => $getItemByEntityBody
+		));
+	}
 
 }
