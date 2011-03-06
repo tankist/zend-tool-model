@@ -40,7 +40,11 @@ class Skaya_Tool_Project_Context_Zf_DbTableFile extends Zend_Tool_Project_Contex
 
 	public function setDbTableName($dbTableName) {
 		$this->_dbTableName = $dbTableName;
-		$this->_filesystemName = $this->getDefaultNameFilter()->filter($dbTableName) . '.php';
+		$filesystemName = $dbTableName . '.php';
+		if ($filter = $this->getDefaultNameFilter() && $filter instanceof Zend_Filter_Interface) {
+			$filesystemName = $filter->filter($dbTableName) . '.php';
+		}
+		$this->_filesystemName = $filesystemName;
 	}
 
 	public function setDefaultNameFilter(Zend_Filter_Interface $defaultNameFilter) {
