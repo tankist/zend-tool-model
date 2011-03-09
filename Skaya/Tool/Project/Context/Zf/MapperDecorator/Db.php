@@ -61,7 +61,7 @@ EOS;
 					'name' => 'get' . $methodsUcToken . 'ById',
 					'parameters' => array(
 						new Zend_CodeGenerator_Php_Parameter(array(
-							'name' => 'id'
+							'name' => $methodsToken . '_id'
 						))
 					),
 					'body' => str_replace('<token>', $methodsToken, $getItemByIdBody)
