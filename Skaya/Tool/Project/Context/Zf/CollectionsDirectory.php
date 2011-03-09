@@ -42,7 +42,7 @@ class Skaya_Tool_Project_Context_Zf_CollectionsDirectory extends Zend_Tool_Proje
 	/**
 	 * @var string
 	 */
-	protected $_filesystemName = 'Collections';
+	protected $_filesystemName = 'Collection';
 
 	/**
 	 * getName()

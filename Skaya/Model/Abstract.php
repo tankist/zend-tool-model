@@ -144,11 +144,9 @@ abstract class Skaya_Model_Abstract implements Skaya_Model_Interface {
 		$data = (array)$this->_data;
 		foreach ($data as $key => &$value) {
 			if (is_object($value)) {
-				if (method_exists($value, 'toArray')) {
+				if ($value instanceof self ||
+					$value instanceof Skaya_Model_Collection_Abstract) {
 					$value = $value->toArray();
-				}
-				else {
-					$value = (array)$value;
 				}
 			}
 		}
