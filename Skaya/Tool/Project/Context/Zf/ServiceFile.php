@@ -67,7 +67,7 @@ return \$paginator;
 EOS;
 		$getItemByIdBody = <<<EOS
 		\${$mapperName}Data = \$this->_mappers->{$mapperName}->get{$modelSubname}ById(\$id);
-return self::create(\${$mapperName}Data);
+return new $modelName(\${$mapperName}Data);
 EOS;
 		$createBody = <<<EOS
 		if (array_key_exists('id', \$data)) {
