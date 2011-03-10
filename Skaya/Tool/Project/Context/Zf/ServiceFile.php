@@ -69,18 +69,24 @@ EOS;
 		\${$mapperName}Data = \$this->_mappers->{$mapperName}->get{$modelSubname}ById(\$id);
 return self::create(\${$mapperName}Data);
 EOS;
+		$createBody = <<<EOS
+		if (array_key_exists('id', \$data)) {
+	unset(\$data['id']);
+}
+return new $modelName(\$data);
+EOS;
 
 		$methods = array(
 			new Zend_CodeGenerator_Php_Method(array(
 				'name' => 'create',
-				'isStatic' => true,
+				'static' => true,
 				'parameters' => array(
 					new Zend_CodeGenerator_Php_Parameter(array(
 						'name' => 'data',
 						'defaultValue' => array()
 					))
 				),
-				'body' => 'return new ' . $modelName . '($data);'
+				'body' => $createBody
 			)),
 			new Zend_CodeGenerator_Php_Method(array(
 				'name' => 'get' . $modelSubname . 'ById',
