@@ -98,6 +98,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 			}
 		}
 		else {
+			$key = $this->getAdapter()->quoteIdentifier($key);
 			$where = $this->getAdapter()->quoteInto("$key=?", $value);
 		}
 		return $where;

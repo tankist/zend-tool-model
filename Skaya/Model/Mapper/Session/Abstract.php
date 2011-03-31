@@ -33,8 +33,7 @@ abstract class Skaya_Model_Mapper_Session_Abstract extends Skaya_Model_Mapper_Ab
 			$session->$firstKey = $sessionData;
 			
 		}
-		
-		return true;
+		return $data;
 	}
 	
 	/**
@@ -61,8 +60,7 @@ abstract class Skaya_Model_Mapper_Session_Abstract extends Skaya_Model_Mapper_Ab
 
 			$session->$firstKey = $sessionData;
 		}
-		
-		return true;
+		return $data;
 	}
 	
 	/**
