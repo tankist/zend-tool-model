@@ -325,7 +325,7 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 				$value = key($this->unmap(array($value => '')));
 			}
 			else {
-				list($key, $value) = each($this->unmap(array($key => $value)));
+				list($value, $direction) = each($this->unmap(array($key => $value)));
 			}
 			if (!empty($value)) {
 				$value .= ' ' . $direction;
