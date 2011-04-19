@@ -70,7 +70,7 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 	* @return Skaya_Paginator
 	*/
 	public function getSearchPaginator($conditions, $order = null) {
-		$select = $this->_prepareSearchQuery($conditions, $order, $count, $offset);
+		$select = $this->_prepareSearchQuery($conditions, $order);
 		$paginator = Skaya_Paginator::factory($select, 'DbSelect');
 		$paginator->addFilter(new Zend_Filter_Callback(array(
 			'callback' => array($this, 'getMappedArrayFromData')
@@ -291,7 +291,11 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 						$term['field'] => $term['value']
 					)));
 					if (!empty($fieldName)) {
-						$fieldName = $adapter->quoteIdentifier(array($term['table'], $fieldName));
+						if (strpos($fieldName, '(') !== false) {
+							$fieldName = new Zend_Db_Expr($fieldName);
+						} else {
+							$fieldName = $adapter->quoteIdentifier(array($term['table'], $fieldName));
+						}
 						$operation = $term['operation'];
 						$placeholder = '?';
 						if ($operation == '%') {
