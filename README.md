@@ -24,9 +24,9 @@ Then Model_DbTable_Users will be created. If no prefix will be given then Model_
 
 Generates mapper class. If Db type were provided then mapper class will be filled with pre-defined functions:
 
-* get<Item>ById
-* get<Items>
-* get<Items>Paginator
+* get[Item]ById
+* get[Items]
+* get[Items]Paginator
 
 ### Collection generation
 
