@@ -331,6 +331,9 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 			else {
 				list($value, $direction) = each($this->unmap(array($key => $value)));
 			}
+			if (empty($direction)) {
+				$direction = Zend_Db_Select::SQL_ASC;
+			}
 			if (!empty($value)) {
 				$value .= ' ' . $direction;
 				$_tmpOrderArray[] = $value;
