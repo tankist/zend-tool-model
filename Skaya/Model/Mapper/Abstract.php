@@ -97,6 +97,22 @@ abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interfa
 		return $newData;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		$fullClassName = get_class($this);
+		if (strpos($fullClassName, '_') !== false) {
+			$mapperName = strrchr($fullClassName, '_');
+			return ltrim($mapperName, '_');
+		} elseif (strpos($fullClassName, '\\') !== false) {
+			$mapperName = strrchr($fullClassName, '\\');
+			return ltrim($mapperName, '\\');
+		} else {
+			return $fullClassName;
+		}
+	}
+
 	public function getProvider() {
 		return $this->_provider;
 	}
