@@ -81,7 +81,7 @@ abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interfa
 		
 		return array();
 	}
-	
+
 	public function getMappedArrayFromData($data) {
 		$data = $this->getRawArrayFromData($data);
 		if (gettype(current($data)) != 'array' && gettype(current($data)) != 'object') {
@@ -96,30 +96,9 @@ abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interfa
 		}
 		return $newData;
 	}
-    
-    /**
-     * getName()
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        $fullClassName = get_class($this);
-        if (strpos($fullClassName, '_') !== false) {
-            $mapperName = strrchr($fullClassName, '_');
-            return ltrim($mapperName, '_');
-        } elseif (strpos($fullClassName, '\\') !== false) {
-            $mapperName = strrchr($fullClassName, '\\');
-            return ltrim($mapperName, '\\');
-        } else {
-            return $fullClassName;
-        }
-    }
 
-    public function getProvider()
-    {
-        return $this->_provider;
-    }
+	public function getProvider() {
+		return $this->_provider;
+	}
 
 }
-?>

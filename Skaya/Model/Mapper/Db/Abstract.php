@@ -4,6 +4,8 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 	protected static $_tables = array();
 	
 	protected $_mapperTableName = '';
+
+	protected $_provider = 'Db';
 	
 	/**
 	* Creates (if necessary) and returns table class instance

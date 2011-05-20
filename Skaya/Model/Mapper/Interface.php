@@ -11,4 +11,3 @@ interface Skaya_Model_Mapper_Interface {
     public function getProvider();
 	
 }
-?>
