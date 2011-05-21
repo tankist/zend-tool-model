@@ -4,6 +4,11 @@ require_once("Abstract.php");
  
 class MyApp_Mapper_Test_User extends MyApp_Mapper_Test_AbstractSkaya {
 
+	protected $_userdata = array(
+		'id' => 1,
+		'first_name' => 'Test User'
+	);
+
 	protected $_fieldMapping = array(
 		'firstName' => 'first_name'
 	);
@@ -13,13 +18,11 @@ class MyApp_Mapper_Test_User extends MyApp_Mapper_Test_AbstractSkaya {
 	public static $userdata = array();
 
 	public function getUserByUsername($username) {
-		$userdata = self::$userdata[$username];
-		return $userdata;
+		return $this->getMappedArrayFromData($this->_userdata);
 	}
 
 	public function getUserByEmail($email) {
-		$userdata = self::$userdata[$email];
-		return $userdata;
+		return $this->getMappedArrayFromData($this->_userdata);
 	}
 
 }

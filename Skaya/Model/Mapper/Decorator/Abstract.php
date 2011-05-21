@@ -31,4 +31,16 @@ abstract class Skaya_Model_Mapper_Decorator_Abstract
 		throw new Skaya_Model_Mapper_Decorator_Exception('Mapper method "'. $method .'" was not found');
 	}
 
+	public function save($data) {
+		return $this->_mapper->save($data);
+	}
+
+	public function delete($data) {
+		return $this->_mapper->delete($data);
+	}
+
+	public function search($conditions, $order = null, $count = null, $offset = null) {
+		return $this->_mapper->search($conditions, $order, $count, $offset);
+	}
+
 }
