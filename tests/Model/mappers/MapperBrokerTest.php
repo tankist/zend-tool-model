@@ -45,7 +45,7 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 	public function testGetSetPluginLoader() {
 		//Test empty initial plugin loader
 		$pluginLoader = Skaya_Model_Mapper_MapperBroker::getPluginLoader();
-		$this->assertType('Zend_Loader_PluginLoader', $pluginLoader);
+		$this->assertInstanceOf('Zend_Loader_PluginLoader', $pluginLoader);
 
 		$pluginLoader = new Zend_Loader_PluginLoader();
 		Skaya_Model_Mapper_MapperBroker::setPluginLoader($pluginLoader);
@@ -138,10 +138,10 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$mapper = Skaya_Model_Mapper_MapperBroker::getStaticMapper('testAddPrefix');
-		$this->assertType('MyApp_Mapper_Db_TestAddPrefix', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Db_TestAddPrefix', $mapper);
 
 		$mapper = Skaya_Model_Mapper_MapperBroker::getStaticMapper('testSessionMapper', 'session');
-		$this->assertType('MyApp_Mapper_Session_TestSessionMapper', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Session_TestSessionMapper', $mapper);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 
 		$dbMapper = $this->mappers->testAddPrefix('db');
 		$newStack = Skaya_Model_Mapper_MapperBroker::getStack('test');
-		$this->assertType('Skaya_Model_Mapper_MapperBroker_PriorityStack', $newStack);
+		$this->assertInstanceOf('Skaya_Model_Mapper_MapperBroker_PriorityStack', $newStack);
 		$this->assertNotEquals($defaultStack, $newStack);
 	}
 
@@ -233,7 +233,7 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testGetInstance() {
 		$broker = Skaya_Model_Mapper_MapperBroker::getInstance();
-		$this->assertType('Skaya_Model_Mapper_MapperBroker', $broker);
+		$this->assertInstanceOf('Skaya_Model_Mapper_MapperBroker', $broker);
 		$this->assertEquals($this->mappers, $broker);
 	}
 
@@ -247,10 +247,10 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$mapper = $this->mappers->getMapper('testAddPrefix');
-		$this->assertType('MyApp_Mapper_Db_TestAddPrefix', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Db_TestAddPrefix', $mapper);
 
 		$mapper = $this->mappers->getMapper('testSessionMapper', 'session');
-		$this->assertType('MyApp_Mapper_Session_TestSessionMapper', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Session_TestSessionMapper', $mapper);
 	}
 
 	/**
@@ -263,10 +263,10 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$mapper = $this->mappers->testAddPrefix();
-		$this->assertType('MyApp_Mapper_Db_TestAddPrefix', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Db_TestAddPrefix', $mapper);
 
 		$mapper = $this->mappers->testSessionMapper('session');
-		$this->assertType('MyApp_Mapper_Session_TestSessionMapper', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Session_TestSessionMapper', $mapper);
 	}
 
 	/**
@@ -279,7 +279,7 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$mapper = $this->mappers->testAddPrefix;
-		$this->assertType('MyApp_Mapper_Db_TestAddPrefix', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Db_TestAddPrefix', $mapper);
 	}
 
 	public function testNormalizeMapperName() {
@@ -289,7 +289,7 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$mapper = $this->mappers->getMapper('Test_Add_Prefix', 'db');
-		$this->assertType('MyApp_Mapper_Db_TestAddPrefix', $mapper);
+		$this->assertInstanceOf('MyApp_Mapper_Db_TestAddPrefix', $mapper);
 	}
 
 	/**

@@ -61,17 +61,17 @@ class Model_Rowset_AbstractTest extends PHPUnit_Framework_TestCase {
     }
 
 	public function testClassConstructor() {
-		$this->assertType('TestRowset', $this->_object);
+		$this->assertInstanceOf('TestRowset', $this->_object);
 	}
 
     public function testTypeHinting() {
         $row = $this->_object[0];
         
-        $this->assertType('integer', $row->key);
-        $this->assertType('string', $row->field1);
-        $this->assertType('float', $row->field2);
-        $this->assertType('int', $row->field3);
-        $this->assertType('null', $row->field4);
+        $this->assertInternalType('integer', $row->key);
+        $this->assertInternalType('string', $row->field1);
+        $this->assertInternalType('float', $row->field2);
+        $this->assertInternalType('int', $row->field3);
+        $this->assertInternalType('null', $row->field4);
     }
 
     public function testValuesConvertion() {

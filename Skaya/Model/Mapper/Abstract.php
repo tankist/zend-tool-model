@@ -1,5 +1,7 @@
 <?php
 
+require_once "Interface.php";
+
 abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interface {
 	
 	protected $_fieldMapping = array();
@@ -8,26 +10,7 @@ abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interfa
 
     protected $_provider = null;
 	
-	/**
-	* Makes model mapper using provider type and model name as parameters
-	* 
-	* @param mixed $provider
-	* @param mixed $modelName
-	* @param mixed $options
-	* @return Skaya_Model_Mapper_Abstract
-	* @throws Skaya_Model_Mapper_Exception
-	*/
-	public static function factory($provider, $modelName, $options = array()) {
-		$className = ucfirst($provider).'_'.ucfirst($modelName);
-		if (!class_exists($className, true)) {
-			throw new Exception('Mapper class not found');
-		}
-		$instance = new $className($options);
-		return $instance;
-	}
-	
-	public function __construct($options = array()) {
-		$this->setOptions($options);
+	public function __construct() {
 		if (!empty($this->_fieldMapping) && empty($this->_reverseFieldMapping)) {
 			$this->_reverseFieldMapping = array_flip($this->_fieldMapping);
 		}
@@ -36,21 +19,6 @@ abstract class Skaya_Model_Mapper_Abstract implements Skaya_Model_Mapper_Interfa
     public function init() {
         
     }
-
-    /**
-	 * Set mapper state from options array
-	 * @param  array $options
-	 * @return Skaya_Model_Mapper_Abstract
-	 */
-	public function setOptions($options) {
-		foreach ($options as $key => $value) {
-			$method = 'set' . $key;
-			if (method_exists($this, $method)) {
-				$this->$method($value);
-			}
-		}
-		return $this;
-	}
 	
 	public function map($data = array()) {
 		$mappedData = array();

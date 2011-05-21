@@ -108,7 +108,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     public function testToArray() {
         //Simple test
 		$array = $this->_object->toArray();
-		$this->assertType('array', $array);
+		$this->assertInternalType('array', $array);
 		$this->assertArrayHasKey('email', $array);
 		$this->assertArrayHasKey('password', $array);
 		$this->assertEquals($this->_email, $array['email']);
@@ -141,7 +141,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
      */
     public function testGetMapper() {
         $mapper = $this->_object->getMapper();
-        $this->assertType('MyApp_Db_Test', $mapper);
+        $this->assertInstanceOf('MyApp_Db_Test', $mapper);
     }
     
     /**
