@@ -12,14 +12,23 @@ abstract class Skaya_Model_Mapper_Decorator_Abstract
     protected $_provider = 'Decorator';
 
 	/**
-	 * @throws Skaya_Model_Mapper_Decorator_Exception
 	 * @param Skaya_Model_Mapper_Interface $mapper
 	 */
 	public function __construct(Skaya_Model_Mapper_Interface $mapper) {
-		if ($mapper instanceof Skaya_Model_Mapper_Decorator_Abstract) {
-			throw new Skaya_Model_Mapper_Decorator_Exception('Decorators cannot be decorated');
-		}
 		$this->_mapper = $mapper;
+	}
+
+	/**
+	 * @throws Skaya_Model_Mapper_Decorator_Exception
+	 * @param  $method
+	 * @param  $params
+	 * @return false|mixed
+	 */
+	public function __call($method, $params) {
+		if (method_exists($this->_mapper, $method)) {
+			return call_user_func_array(array($this->_mapper, $method), $params);
+		}
+		throw new Skaya_Model_Mapper_Decorator_Exception('Mapper method "'. $method .'" was not found');
 	}
 
 }

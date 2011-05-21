@@ -1,6 +1,6 @@
 <?php
 
-class Model_Row_AbstractTest extends ControllerTestCase {
+class Model_Row_AbstractTest extends PHPUnit_Framework_TestCase {
 
 	/**
      * @var Model_Row_Abstract
@@ -66,4 +66,4 @@ class Model_Row_AbstractTest extends ControllerTestCase {
 
 }
 
-require_once APPLICATION_PATH . '/../tests/application/models/_files/RowMocks.php';
+require_once TESTS_PATH . '/Model/Row/_files/RowMocks.php';

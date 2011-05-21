@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpunit bootstrap="./application/bootstrap.php"
+<phpunit bootstrap="./bootstrap.php"
     colors="true"
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
@@ -8,7 +8,7 @@
     syntaxCheck="true">
 
     <!-- запускаем все тесты из корневой директории -->
-    <testsuite name="Bharat Test Suite">
+    <testsuite name="Skaya Models Test Suite">
         <directory>./</directory>
     </testsuite>
 
@@ -17,16 +17,16 @@
         <blacklist>
             <directory suffix=".php">/usr/share/php</directory>
             <directory suffix=".php">../tests</directory>
-            <directory suffix=".php">../tests/application/models/_files</directory>
-            <directory suffix=".php">../tests/application/models/mappers/_files</directory>
+            <directory suffix=".php">../tests/Model/_files</directory>
+            <directory suffix=".php">../tests/Model/mappers/_files</directory>
+            <directory suffix=".php">../tests/Model/Row/_files</directory>
         </blacklist>
         <!-- смотрим лишь на следующие директории -->
         <whitelist>
-            <directory suffix=".php">../application</directory>
-            <directory suffix=".php">../library</directory>
+            <directory suffix=".php">../Skaya</directory>
             <exclude>
-                <directory suffix=".phtml">../application</directory>
-                <file>../application/Bootstrap.php</file>
+                <!--<directory suffix=".phtml">../application</directory>
+                <file>../application/Bootstrap.php</file>-->
             </exclude>
         </whitelist>
     </filter>

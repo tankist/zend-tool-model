@@ -64,16 +64,13 @@ class Skaya_Model_Mapper_Decorator_Cache
 	 * @return false|mixed
 	 */
 	public function __call($method, $params) {
-		if (method_exists($this->_mapper, $method)) {
-			$cache_id = $this->getCacheId($method, $params);
-			$cacheTags = $this->getCacheTags($method, $params);
-			if (!($data = self::getCache()->load($cache_id))) {
-				$data = call_user_func_array(array($this->_mapper, $method), $params);
-				self::getCache()->save($data, $cache_id, $cacheTags);
-			}
-			return $data;
+		$cache_id = $this->getCacheId($method, $params);
+		$cacheTags = $this->getCacheTags($method, $params);
+		if (!($data = self::getCache()->load($cache_id))) {
+			$data = parent::__call($method, $params);
+			self::getCache()->save($data, $cache_id, $cacheTags);
 		}
-		throw new Skaya_Model_Mapper_Decorator_Exception('Mapper method "'. $method .'" was not found');
+		return $data;
 	}
 
 	public function getCacheId($method, $params = array()) {
