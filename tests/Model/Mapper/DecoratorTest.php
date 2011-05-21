@@ -12,46 +12,6 @@ class Mapper_DecoratorTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected $_decorator;
 
-	protected $_rawDataRow = array(
-		'id' => 1,
-		'first_name' => 'UserTest'
-	);
-
-	protected $_rawDataSet = array(
-		array(
-			'id' => 1,
-			'first_name' => 'User Test 1'
-		),
-		array(
-			'id' => 2,
-			'first_name' => 'User Test 2'
-		),
-		array(
-			'id' => 3,
-			'first_name' => 'User Test 3'
-		)
-	);
-
-	protected $_modelRow = array(
-		'id' => 1,
-		'firstName' => 'UserTest'
-	);
-
-	protected $_modelSet = array(
-		array(
-			'id' => 1,
-			'firstName' => 'User Test 1'
-		),
-		array(
-			'id' => 2,
-			'firstName' => 'User Test 2'
-		),
-		array(
-			'id' => 3,
-			'firstName' => 'User Test 3'
-		)
-	);
-
 	public function setUp() {
 		Skaya_Model_Mapper_MapperBroker::addPath(realpath(dirname(__FILE__)) . '/../mappers/_files/MyApp/Mapper/', 'MyApp_Mapper');
 		$broker = Skaya_Model_Mapper_MapperBroker::getInstance();

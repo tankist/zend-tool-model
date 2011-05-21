@@ -13,3 +13,17 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Loader/Autoloader.php';
 $autoload = Zend_Loader_Autoloader::getInstance();
 $autoload->registerNamespace('Skaya_');
+
+$cache = Zend_Cache::factory(
+	'Core',
+	'File',
+	array(
+		
+	),
+	array(
+		'cache_dir' => realpath(TESTS_PATH . '/../cache'),
+		'read_control_type' => 'adler32'
+	)
+);
+
+Zend_Registry::set('cache', $cache);

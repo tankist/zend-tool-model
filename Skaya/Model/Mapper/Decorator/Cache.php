@@ -50,6 +50,7 @@ class Skaya_Model_Mapper_Decorator_Cache
 	 * @return false|mixed
 	 */
 	public function __call($method, $params) {
+
 		$cache_id = $this->getCacheId($method, $params);
 		$cacheTags = $this->getCacheTags($method, $params);
 		if (!($data = self::getCache()->load($cache_id))) {
@@ -119,6 +120,18 @@ class Skaya_Model_Mapper_Decorator_Cache
 		$name = $this->_mapper->getName();
 		$type = $this->_mapper->getProvider();
 		return array($name, $type, $method);
+	}
+
+	protected function _parseMethodDocBlock($method) {
+		$reflection = new ReflectionObject($this->_mapper);
+		/**
+		 * @var ReflectionMethod $methodReflection
+		 */
+		$methodReflection = $reflection->getMethod($method);
+		$docBlock = $methodReflection->getDocComment();
+		if ($docBlock && preg_match_all('$@([a-z0-9_]+) ([]+)$im', $docBlock, $matches)) {
+
+		}
 	}
 
 }

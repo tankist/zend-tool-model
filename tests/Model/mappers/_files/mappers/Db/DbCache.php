@@ -12,14 +12,24 @@ class MyApp_Db_DbCache
 		'Item 5'
 	);
 
-	public function getDecorator() {
-		return new Skaya_Model_Mapper_Decorator_Cache($this);
-	}
-
+	/**
+	 * @cachable
+	 * @param  $id
+	 * @cache_tags item
+	 * @return array|bool
+	 */
 	public function getItemById($id) {
 		return (array_key_exists($id, $this->_items))?$this->_items[$id]:false;
 	}
 
+	/**
+	 * @cachable
+	 * @cache_tags list items
+	 * @param null $order
+	 * @param null $count
+	 * @param null $offset
+	 * @return array
+	 */
 	public function getItemsList($order = null, $count = null, $offset = null) {
 		return $this->_items;
 	}
