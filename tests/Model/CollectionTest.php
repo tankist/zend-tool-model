@@ -98,8 +98,9 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
 	public function testGetIterator() {
 		$this->assertType('Iterator', $this->collection->getIterator());
 		$i = 0;
-		foreach ($this->collection as $item) {
+		foreach ($this->collection as $index => $item) {
 			$this->assertType('testModel', $item);
+			$this->assertEquals($i, $index);
 			$this->assertEquals($this->_items[$i++], $item->toArray());
 		}
 	}
@@ -127,7 +128,6 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testWrongItemsException() {
 		$object = new TestCollection(array(1));
-
 	}
 
 	/**
