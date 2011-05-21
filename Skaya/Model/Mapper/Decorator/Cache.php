@@ -43,20 +43,6 @@ class Skaya_Model_Mapper_Decorator_Cache
 		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('search', 'list'));
 	}
 
-	public function search($conditions, $order = null, $count = null, $offset = null) {
-		$params = func_get_args();
-		$cache_id = $this->getCacheId('search', $params);
-		$cacheTags = $this->getCacheTags('search', $params);
-		if (!in_array('search', $cacheTags)) {
-			$cacheTags[] = 'search';
-		}
-		if (!($data = self::getCache()->load($cache_id))) {
-			$data = call_user_func_array(array($this->_mapper, 'search'), $params);
-			self::getCache()->save($data, $cache_id, $cacheTags);
-		}
-		return $data;
-	}
-
 	/**
 	 * @throws Skaya_Model_Mapper_Decorator_Exception
 	 * @param  $method

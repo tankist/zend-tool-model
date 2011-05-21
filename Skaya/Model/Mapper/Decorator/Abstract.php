@@ -39,8 +39,4 @@ abstract class Skaya_Model_Mapper_Decorator_Abstract
 		return $this->_mapper->delete($data);
 	}
 
-	public function search($conditions, $order = null, $count = null, $offset = null) {
-		return $this->_mapper->search($conditions, $order, $count, $offset);
-	}
-
 }
