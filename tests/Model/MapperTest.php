@@ -55,7 +55,7 @@ class MapperTest extends PHPUnit_Framework_TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp() {
-		Skaya_Model_Mapper_MapperBroker::addPath(realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'mappers/_files/MyApp/Mapper/', 'MyApp_Mapper');
+		Skaya_Model_Mapper_MapperBroker::addPath(realpath(TESTS_PATH . '/Model/mappers/_files/MyApp/Mapper/'), 'MyApp_Mapper');
 		$broker = Skaya_Model_Mapper_MapperBroker::getInstance();
 		$this->_mapper = $broker->getMapper('User', 'Test');
 	}

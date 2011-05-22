@@ -165,7 +165,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		if (!$this->_object) {
 			$this->_object = new TestModel();
             Skaya_Model_Mapper_MapperBroker::addPath(
-                dirname(__FILE__) . DIRECTORY_SEPARATOR . 'mappers' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'mappers',
+                realpath(TESTS_PATH . '/Model/mappers/_files/mappers/'),
                 'MyApp'
             );
 		}

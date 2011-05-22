@@ -27,9 +27,9 @@ class Skaya_Model_Mapper_Decorator_CacheTest extends PHPUnit_Framework_TestCase 
 	protected function setUp() {
 		$this->_cache = Zend_Registry::get('cache');
 
-		Skaya_Model_Mapper_MapperBroker::addPath(realpath(dirname(__FILE__)) . '/../../mappers/_files/MyApp/Mapper/', 'MyApp_Mapper');
+		Skaya_Model_Mapper_MapperBroker::addPath(realpath(TESTS_PATH . '/Model/mappers/_files/mappers/'), 'MyApp');
 		$broker = Skaya_Model_Mapper_MapperBroker::getInstance();
-		$this->_mapper = $broker->getMapper('User', 'Test');
+		$this->_mapper = $broker->getMapper('DbCache', 'Db');
 		$this->_decorator = new Skaya_Model_Mapper_Decorator_Cache($this->_mapper);
 
 		$this->_decorator->setCache($this->_cache);
@@ -78,10 +78,7 @@ class Skaya_Model_Mapper_Decorator_CacheTest extends PHPUnit_Framework_TestCase 
 	 * @todo Implement test__call().
 	 */
 	public function testMagicCall() {
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$items = $this->_decorator->getItemsList();
 	}
 
 	/**

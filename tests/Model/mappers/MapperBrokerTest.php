@@ -57,7 +57,7 @@ class Skaya_Model_Mapper_MapperBrokerTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testAddPath() {
 		Skaya_Model_Mapper_MapperBroker::addPath(
-			dirname(__FILE__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'mappers',
+			realpath(TESTS_PATH . '/Model/mappers/_files/mappers'),
 			'MyApp'
 		);
 		$mapper = $this->mappers->test('db');

@@ -5,4 +5,6 @@ interface Skaya_Model_Mapper_Decorator_Cachable {
 
 	public function getCacheTags($method, $params = array());
 
+	public function getCachableMethods();
+
 }

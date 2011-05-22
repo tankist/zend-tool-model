@@ -22,7 +22,8 @@ $cache = Zend_Cache::factory(
 	),
 	array(
 		'cache_dir' => realpath(TESTS_PATH . '/../cache'),
-		'read_control_type' => 'adler32'
+		'read_control_type' => 'adler32',
+		'automatic_serialization' => true
 	)
 );
 
