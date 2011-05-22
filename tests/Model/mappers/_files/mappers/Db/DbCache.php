@@ -16,6 +16,7 @@ class MyApp_Db_DbCache
 	 * @cachable
 	 * @param  $id
 	 * @cache_tags item
+	 * @cache_id item_{$id}_{$data->ix}
 	 * @return array|bool
 	 */
 	public function getItemById($id) {

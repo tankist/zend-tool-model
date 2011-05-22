@@ -78,7 +78,7 @@ class Skaya_Model_Mapper_Decorator_CacheTest extends PHPUnit_Framework_TestCase 
 	 * @todo Implement test__call().
 	 */
 	public function testMagicCall() {
-		$items = $this->_decorator->getItemsList();
+		$items = $this->_decorator->getItemById(1);
 	}
 
 	/**

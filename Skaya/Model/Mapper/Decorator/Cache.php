@@ -106,31 +106,49 @@ class Skaya_Model_Mapper_Decorator_Cache
 		$reflection = new ReflectionObject($this->_mapper);
 		$name = $this->_mapper->getName();
 		$type = $this->_mapper->getProvider();
-		$cacheIdTemplate = '';
+		$classReflection = $this->_getReflectionData();
+		$cacheIdTemplate = (isset($classReflection['methods'][$method]['cache_id']))
+							?$classReflection['methods'][$method]['cache_id']:'';
 		$cache_id = $name . '_' .$type . '_' . $method;
 		/**
 		 * @var ReflectionMethod $methodReflection
 		 */
 		$methodReflection = $reflection->getMethod($method);
-		$docBlock = $methodReflection->getDocComment();
-		if ($docBlock && preg_match('$@cache_id\s+([\w_\$\[\]]+)$im', $docBlock, $matches)) {
-			
-		}
 		$regularParams = $namedParams = array();
 		foreach($methodReflection->getParameters() as /** @var ReflectionParameter $parameter */$parameter) {
 			$param = $parameter->getName();
 			$namedParams[$param] = $value = $params[$parameter->getPosition()];
-			if (in_array($param, $this->_regularParams) && $value !== null) {
-				$regularParams[$param] = $value;
-			}
-			elseif (!empty($value)) {
-				$cache_id .= ':' . $value;
+			if (empty($cacheIdTemplate)) {
+				if (in_array($param, $this->_regularParams) && $value !== null) {
+					$regularParams[$param] = $value;
+				}
+				elseif (!empty($value)) {
+					$cache_id .= ':' . $value;
+				}
 			}
 		}
-		if (!empty($regularParams)) {
+		if (!empty($cacheIdTemplate) && preg_match_all('$\{\$([^\{\}]+)\}$i', $cacheIdTemplate, $matches)) {
+			$cache_id = $cacheIdTemplate;
+			$vars = $matches[1];
+			foreach ($vars as $var) {
+				$varValue = self::_parseVariable($var, $namedParams);
+				$cache_id = str_replace('{$' . $var . '}', $varValue, $cache_id);
+			}
+		}
+		elseif (!empty($regularParams)) {
 			$cache_id .= '/' . str_replace(array("\r", "\n"), " ", print_r($regularParams, true));
 		}
-		return md5($cache_id);
+		return (strlen($cache_id) > 30)?md5($cache_id):$cache_id;
+	}
+
+	protected static function _parseVariable($variable, $stack) {
+		if (preg_match('$[a-z0-9_]+$i', $variable, $matches)) {
+			$var = $matches[0];
+			switch (gettype($stack)) {
+				case 'array' : $stack = $stack[$var];
+			}
+		}
+		return $variable;
 	}
 
 	/**
@@ -173,6 +191,9 @@ class Skaya_Model_Mapper_Decorator_Cache
 					if (preg_match('$@cache_tags\s+([\w\s_]+)\s+$im', $docBlock, $matches)) {
 						$list = trim($matches[1]);
 						$methodOptions['tags'] = preg_split('$\s+$', $list);
+					}
+					if (preg_match('$@cache_id\s+([^\s]+)$im', $docBlock, $matches)) {
+						$methodOptions['cache_id'] = trim($matches[1]);
 					}
 					$methods[$method->getName()] = $methodOptions;
 				}

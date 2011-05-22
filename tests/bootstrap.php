@@ -18,12 +18,11 @@ $cache = Zend_Cache::factory(
 	'Core',
 	'File',
 	array(
-		
+		'automatic_serialization' => true
 	),
 	array(
 		'cache_dir' => realpath(TESTS_PATH . '/../cache'),
-		'read_control_type' => 'adler32',
-		'automatic_serialization' => true
+		'read_control_type' => 'adler32'
 	)
 );
 
