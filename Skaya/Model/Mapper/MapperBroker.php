@@ -67,9 +67,7 @@ class Skaya_Model_Mapper_MapperBroker
 	public static function getPluginLoader()
 	{
 		if (null === self::$_pluginLoader) {
-			self::$_pluginLoader = new Zend_Loader_PluginLoader(array(
-				'Model_Mapper' => APPLICATION_PATH . '/models/mappers',
-			));
+			self::$_pluginLoader = new Zend_Loader_PluginLoader();
 		}
 		return self::$_pluginLoader;
 	}
