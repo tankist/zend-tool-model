@@ -30,7 +30,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 		return $this->fetchRow($where, $order, $count, $offset);
 	}
 
-	public function count(Zend_Db_Select $select) {
+	public function count(Zend_Db_Table_Select $select) {
 		$select->reset(Zend_Db_Select::COLUMNS)->columns(array('__count' => new Zend_Db_Expr('COUNT(*)')));
 		$result = $this->_fetch($select);
 		return (count($result) > 0)?(int)$result[0]['__count']:0;
@@ -78,7 +78,7 @@ abstract class Skaya_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 	* @param string $name
 	* @return Skaya_Model_DbTable_Abstract
 	*/
-	public function factory($name) {
+	public static function factory($name) {
 		$className = $name;
 		if (strpos($name, '_') === false) {
 			$className = 'Model_DbTable_'.ucfirst(Zend_Filter::filterStatic($name, 'Word_UnderscoreToCamelCase'));

@@ -17,8 +17,4 @@ class MyApp_Mapper_Test_AbstractSkaya extends Skaya_Model_Mapper_Abstract {
 
 	}
 
-	public function search($conditions, $order = null, $count = null, $offset = null) {
-
-	}
-
 }

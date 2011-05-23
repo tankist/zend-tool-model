@@ -138,7 +138,7 @@ class Skaya_Model_Mapper_MapperBroker_PriorityStack implements IteratorAggregate
     {
         $priority = (int) $priority;
 
-        if (!$mapper instanceof Skaya_Model_Mapper_Abstract) {
+        if (!$mapper instanceof Skaya_Model_Mapper_Interface) {
             throw new Skaya_Model_Exception('$mapper must extend Skaya_Model_Mapper_Abstract.');
         }
 

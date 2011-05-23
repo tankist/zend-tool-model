@@ -91,10 +91,6 @@ abstract class Skaya_Model_Mapper_Session_Abstract extends Skaya_Model_Mapper_Ab
 		return self::$_defaultSession;
 	}
 	
-	public function search($conditions, $order = null, $count = null, $offset = null) {
-		return false;
-	}
-	
 	protected function _arrayMerge($array1, $array2, $primaryKey) {
 		$count = count($primaryKey);
 		

@@ -4,6 +4,8 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 	protected static $_tables = array();
 	
 	protected $_mapperTableName = '';
+
+	protected $_provider = 'Db';
 	
 	/**
 	* Creates (if necessary) and returns table class instance
@@ -56,10 +58,9 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 	* @return array
 	*/
 	public function search($conditions, $order = null, $count = null, $offset = null) {
-		$searchResult = array();
 		$select = $this->_prepareSearchQuery($conditions, $order, $count, $offset);
 		$searchResult = self::_getTableByName($this->_mapperTableName)->fetchAll($select);
-		return $this->getMappedArrayFromData($searchResult);;
+		return $this->getMappedArrayFromData($searchResult);
 	}
 	
 	/**
@@ -79,11 +80,8 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 	}
 	
 	public function getRawArrayFromData($data) {
-		if ($data instanceOf Zend_Db_Table_Row_Abstract) {
-			return $data->toArray();
-		}
-		
-		if ($data instanceOf Zend_Db_Table_Rowset_Abstract) {
+		if ($data instanceOf Zend_Db_Table_Row_Abstract ||
+		    $data instanceOf Zend_Db_Table_Rowset_Abstract) {
 			return $data->toArray();
 		}
 		
@@ -361,6 +359,9 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 				->quoteIdentifier($reference[Skaya_Model_DbTable_Abstract::REF_COLUMNS][$i]);
 			$definitions[] = $reference['tableAlias'].".$tableColumn = {$reference['referenceTableAlias']}.$referenceTableColumn";
 		}
+		/**
+		 * @var Zend_Db_Table_Abstract $table
+		 */
 		$table = $reference['table'];
 		$tableAlias = $reference['tableAlias'];
 		if (array_key_exists($tableAlias, $select->getPart(Zend_Db_Table_Select::FROM))) {
@@ -393,6 +394,9 @@ abstract class Skaya_Model_Mapper_Db_Abstract extends Skaya_Model_Mapper_Abstrac
 			$row = $table->createRow($data);
 		}
 		else {
+			/**
+			 * @var Zend_Db_Table_Rowset_Abstract $rowSet
+			 */
 			$rowSet = call_user_func_array(array($table, 'find'), $primaryValues);
 			if ($rowSet instanceOf Zend_Db_Table_Rowset_Abstract && count($rowSet->toArray())>0 ) {
 				$row = $rowSet->current();

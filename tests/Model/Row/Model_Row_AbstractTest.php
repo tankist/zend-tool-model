@@ -1,6 +1,6 @@
 <?php
 
-class Model_Row_AbstractTest extends ControllerTestCase {
+class Model_Row_AbstractTest extends PHPUnit_Framework_TestCase {
 
 	/**
      * @var Model_Row_Abstract
@@ -45,15 +45,15 @@ class Model_Row_AbstractTest extends ControllerTestCase {
     }
 
 	public function testClassConstructor() {
-		$this->assertType('TestRow', $this->_object);
+		$this->assertInstanceOf('TestRow', $this->_object);
 	}
 
     public function testTypeHinting() {
-        $this->assertType('integer', $this->_object->key);
-        $this->assertType('string', $this->_object->field1);
-        $this->assertType('float', $this->_object->field2);
-        $this->assertType('int', $this->_object->field3);
-        $this->assertType('null', $this->_object->field4);
+        $this->assertInternalType('integer', $this->_object->key);
+        $this->assertInternalType('string', $this->_object->field1);
+        $this->assertInternalType('float', $this->_object->field2);
+        $this->assertInternalType('int', $this->_object->field3);
+        $this->assertInternalType('null', $this->_object->field4);
     }
 
     public function testValuesConvertion() {
@@ -66,4 +66,4 @@ class Model_Row_AbstractTest extends ControllerTestCase {
 
 }
 
-require_once APPLICATION_PATH . '/../tests/application/models/_files/RowMocks.php';
+require_once TESTS_PATH . '/Model/Row/_files/RowMocks.php';

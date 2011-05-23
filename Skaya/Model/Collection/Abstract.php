@@ -1,5 +1,6 @@
 <?php
-abstract class Skaya_Model_Collection_Abstract implements ArrayAccess, Countable, IteratorAggregate {
+abstract class Skaya_Model_Collection_Abstract
+	implements ArrayAccess, Countable, IteratorAggregate, Skaya_Model_Collection_Interface {
 	
 	protected $_items = array();
 	
@@ -7,16 +8,16 @@ abstract class Skaya_Model_Collection_Abstract implements ArrayAccess, Countable
 	
 	protected $_position = 0;
 	
-	public function __construct($products = array()) {
-		if (!empty($products) && is_array($products)) {
-			foreach ($products as $product) {
-				if (is_array($product) || is_object($product)) {
+	public function __construct($items = array()) {
+		if (!empty($items) && is_array($items)) {
+			foreach ($items as $item) {
+				if (is_array($item) || is_object($item)) {
 					if (!class_exists($this->_itemType, true)) {
 						throw new Skaya_Model_Collection_Exception('Class for the item was not found');
 					}
 					$reflector = new ReflectionClass($this->_itemType);
-					$productInstance = $reflector->newInstanceArgs(array($product));
-					$this->_items[] = $productInstance;
+					$itemInstance = $reflector->newInstanceArgs(array($item));
+					$this->_items[] = $itemInstance;
 				}
 				else {
 					throw new Skaya_Model_Collection_Exception('Wrong type of the item');
