@@ -145,7 +145,12 @@ class Skaya_Model_Mapper_Decorator_Cache
 		if (preg_match('$[a-z0-9_]+$i', $variable, $matches)) {
 			$var = $matches[0];
 			switch (gettype($stack)) {
-				case 'array' : $stack = $stack[$var];
+				case 'array' :
+					$stack = $stack[$var];
+					break;
+				case 'object' :
+					$stack = $stack->$var;
+					break;
 			}
 		}
 		return $variable;
