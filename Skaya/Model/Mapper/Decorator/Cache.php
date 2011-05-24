@@ -9,6 +9,8 @@ class Skaya_Model_Mapper_Decorator_Cache
 
 	protected $_reflectionData = array();
 
+	protected $_enabled = true;
+
 	/**
 	 * @var Zend_Cache_Core
 	 */
@@ -32,15 +34,11 @@ class Skaya_Model_Mapper_Decorator_Cache
 	}
 
 	public function save($data) {
-		$name = $this->_mapper->getName();
-		$type = $this->_mapper->getProvider();
 		$cache = self::getCache();
 		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('list'));
 	}
 
 	public function delete($data) {
-		$name = $this->_mapper->getName();
-		$type = $this->_mapper->getProvider();
 		$cache = self::getCache();
 		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('list'));
 	}
@@ -53,14 +51,17 @@ class Skaya_Model_Mapper_Decorator_Cache
 	 */
 	public function __call($method, $params) {
 		$methods = $this->getCachableMethods();
-		if (!in_array($method, $methods)) {
+		if (!$this->getEnabled() || !in_array($method, $methods)) {
 			return parent::__call($method, $params);
+		}
+		if (!($cache = self::getCache())) {
+			throw new Skaya_Model_Mapper_Decorator_Exception('Cache engine was not defined');
 		}
 		$cache_id = $this->getCacheId($method, $params);
 		$cacheTags = $this->getCacheTags($method, $params);
-		if (!($data = self::getCache()->load($cache_id))) {
+		if (!($data = $cache->load($cache_id))) {
 			$data = parent::__call($method, $params);
-			self::getCache()->save($data, $cache_id, $cacheTags);
+			$cache->save($data, $cache_id, $cacheTags);
 		}
 		return $data;
 	}
@@ -142,18 +143,48 @@ class Skaya_Model_Mapper_Decorator_Cache
 	}
 
 	protected static function _parseVariable($variable, $stack) {
-		if (preg_match('$[a-z0-9_]+$i', $variable, $matches)) {
-			$var = $matches[0];
-			switch (gettype($stack)) {
-				case 'array' :
-					$stack = $stack[$var];
-					break;
-				case 'object' :
-					$stack = $stack->$var;
-					break;
+		if (!$variable) {
+			return $stack;
+		}
+		if (is_scalar($stack)) {
+			return (!$variable)?$stack:false;
+		}
+		if (strpos('[', $variable) === 0) {
+			$close = strpos(']', $variable);
+			if ($close === false) {
+				return false;
+			}
+			$index = substr($variable, 1, $close - 1);
+			if (!$index || !is_array($stack) || !array_key_exists($index, $stack)) {
+				return false;
+			}
+			$stack = $stack[$index];
+			$variable = substr($variable, $close);
+			return self::_parseVariable($variable, $stack);
+		}
+		elseif (strpos('->', $variable) === 0) {
+			if (preg_match('$[a-z0-9_]+$i', substr($variable, 2), $matches)) {
+				$index = $matches[0];
+				if (!$index || !is_object($stack) || !property_exists($stack, $index)) {
+					return false;
+				}
+				$stack = $stack->$index;
+				$variable = substr($variable, 2 + strlen($index));
+				return self::_parseVariable($variable, $stack);
 			}
 		}
-		return $variable;
+		else {
+			switch (gettype($stack)) {
+				case 'array' :
+					$stack = (is_array($stack) && array_key_exists($variable, $stack))?$stack[$variable]:false;
+					break;
+				case 'object' :
+					$stack = (is_object($stack) && property_exists($stack, $variable))?$stack->$variable:false;
+					break;
+			}
+			return $stack;
+		}
+		return false;
 	}
 
 	/**
@@ -204,11 +235,19 @@ class Skaya_Model_Mapper_Decorator_Cache
 				}
 			}
 			$this->_reflectionData = array(
-				'methods' => $methods,
-				'saveDeleteMirror'
+				'methods' => $methods
 			);
 		}
 		return $this->_reflectionData;
+	}
+
+	public function setEnabled($enabled) {
+		$this->_enabled = $enabled;
+		return $this;
+	}
+
+	public function getEnabled() {
+		return $this->_enabled;
 	}
 
 }

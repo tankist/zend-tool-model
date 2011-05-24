@@ -51,7 +51,12 @@ class Skaya_Model_Mapper_Decorator_CacheTest extends PHPUnit_Framework_TestCase 
 	 * @todo Implement testSetCache().
 	 */
 	public function testGetSetCache() {
+		$originalCache = $this->_decorator->getCache();
+		$this->assertInstanceOf('Zend_Cache_Core', $originalCache);
+		$newCache = new Zend_Cache_Core(array('automatic_serialization' => true));
+		$this->_decorator->setCache($newCache);
 		$this->assertInstanceOf('Zend_Cache_Core', $this->_decorator->getCache());
+		$this->assertEquals($newCache, $this->_decorator->getCache());
 	}
 
 	/**
@@ -78,7 +83,13 @@ class Skaya_Model_Mapper_Decorator_CacheTest extends PHPUnit_Framework_TestCase 
 	 * @todo Implement test__call().
 	 */
 	public function testMagicCall() {
-		$items = $this->_decorator->getItemById(1);
+		$item = $this->_decorator->getItemById(1);
+		//Disable cache
+		$this->_decorator->setEnabled(false);
+		$nonCachedItem = $this->_decorator->getItemById(1);
+		//Enable cache
+		$this->_decorator->setEnabled(true);
+		$this->assertEquals($nonCachedItem, $item);
 	}
 
 	/**
