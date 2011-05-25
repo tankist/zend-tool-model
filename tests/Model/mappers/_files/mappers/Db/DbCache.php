@@ -16,7 +16,7 @@ class MyApp_Db_DbCache
 	 * @cachable
 	 * @param  $id
 	 * @cache_tags item
-	 * @cache_id item_{$id}_{$data->ix}
+	 * @cache_id item_{$id}
 	 * @return array|bool
 	 */
 	public function getItemById($id) {
@@ -33,6 +33,17 @@ class MyApp_Db_DbCache
 	 */
 	public function getItemsList($order = null, $count = null, $offset = null) {
 		return $this->_items;
+	}
+
+	/**
+	 * @cachable
+	 * @cache_id item_{$data[id]}
+	 * @cache_tags item
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function getItemByDataBlob($data = array()) {
+		return (array_key_exists($data['id'], $this->_items))?$this->_items[$data['id']]:false;
 	}
 
 }
