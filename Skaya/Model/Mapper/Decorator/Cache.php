@@ -5,8 +5,6 @@ class Skaya_Model_Mapper_Decorator_Cache
 
 	protected $_cacheTemplates = array();
 
-	protected $_regularParams = array('order', 'count', 'offset');
-
 	protected $_reflectionData = array();
 
 	protected $_enabled = true;
@@ -115,17 +113,15 @@ class Skaya_Model_Mapper_Decorator_Cache
 		 * @var ReflectionMethod $methodReflection
 		 */
 		$methodReflection = $reflection->getMethod($method);
-		$regularParams = $namedParams = array();
+		$namedParams = array();
 		foreach($methodReflection->getParameters() as /** @var ReflectionParameter $parameter */$parameter) {
 			$param = $parameter->getName();
 			$namedParams[$param] = $value = $params[$parameter->getPosition()];
-			if (empty($cacheIdTemplate)) {
-				if (in_array($param, $this->_regularParams) && $value !== null) {
-					$regularParams[$param] = $value;
-				}
-				elseif (!empty($value)) {
-					$cache_id .= ':' . $value;
-				}
+			if (empty($cacheIdTemplate) && !empty($value)) {
+                if (!is_scalar($value)) {
+                    $value = var_export($value);
+                }
+                $cache_id .= '_' . trim(preg_replace('$[^a-zA-Z0-9_]+$i', "_", $value), '_');
 			}
 		}
 		if (!empty($cacheIdTemplate) && preg_match_all('$\{\$([^\{\}]+)\}$i', $cacheIdTemplate, $matches)) {
@@ -133,11 +129,11 @@ class Skaya_Model_Mapper_Decorator_Cache
 			$vars = $matches[1];
 			foreach ($vars as $var) {
 				$varValue = self::_parseVariable($var, $namedParams);
-				$cache_id = str_replace('{$' . $var . '}', $varValue, $cache_id);
+                if (!is_scalar($varValue)) {
+                    $varValue = var_export($varValue, true);
+                }
+				$cache_id = str_replace('{$' . $var . '}', (string)$varValue, $cache_id);
 			}
-		}
-		elseif (!empty($regularParams)) {
-			$cache_id .= '/' . str_replace(array("\r", "\n"), " ", print_r($regularParams, true));
 		}
 		return (strlen($cache_id) > 30)?md5($cache_id):$cache_id;
 	}
