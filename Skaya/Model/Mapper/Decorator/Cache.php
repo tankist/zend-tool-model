@@ -33,12 +33,28 @@ class Skaya_Model_Mapper_Decorator_Cache
 
 	public function save($data) {
 		$cache = self::getCache();
-		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('list'));
+        $data = $this->_mapper->save($data);
+        if (!($cacheTags = $this->getCacheTags('save', array($data)))) {
+            $cacheTags = array('list');
+        }
+		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cacheTags);
+        if ($cache_id = $this->getCacheId('save', array($data))) {
+            $cache->remove($cache_id);
+        }
+        return $data;
 	}
 
 	public function delete($data) {
 		$cache = self::getCache();
-		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('list'));
+        $data = $this->_mapper->delete($data);
+        if (!($cacheTags = $this->getCacheTags('delete', array($data)))) {
+            $cacheTags = array('list');
+        }
+		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cacheTags);
+        if ($cache_id = $this->getCacheId('delete', array($data))) {
+            $cache->remove($cache_id);
+        }
+        return $data;
 	}
 
 	/**
