@@ -1,6 +1,5 @@
 *.log
 *.bak
-index.php
 .idea/
 .nbproject/
 tests/report/
